@@ -4,8 +4,9 @@
  */
 package logic;
 
-import structures.object.Song;
+import structures.object.*;
 
+import structures.stack.Pila;
 /**
  *
  * @author marck
@@ -13,28 +14,60 @@ import structures.object.Song;
 public class BLMusic {
 
     private BLAudioPlayer audioPlayer = new BLAudioPlayer();
+    private Pila<Song> songStack = new Pila<>();
     
+    
+    // Pandaman
     public void addSongToPlaylist(Song song) {
 
+        
+    }
+    
+     // Marck
+    public void loop() {
+
+        
     }
 
+     // Marck
     public void playAudio(String filepath) {
 
     }
 
+     // Marck
     public void playNext() {
 
     }
+    
+     public void playPrevious() {
 
-          
+    }
+
+    // Pandaman
+ 
     public void pause() {
 
     }
 
+     //Alexis
     public void resume() {
 
     }
+    
+    //Jean Marko
+    public Song searchSong(String nombre){
+        
+        
+    }
+    
+     public Playlist searchPlaylist(String nombre){
+        
+        
+    }
+    
+    
 
+    //Alexis
     public void replay() {
 
     }
