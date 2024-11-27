@@ -4,19 +4,39 @@
  */
 package logic;
 
+import structures.object.Song;
+
 /**
  *
  * @author marck
  */
 public class BLMusic {
+
+    private BLAudioPlayer audioPlayer = new BLAudioPlayer();
     
-    
-    
-    
-    
-    public void playAudio(String filepath){
-        
+    public void addSongToPlaylist(Song song) {
+
     }
-    
-    
+
+    public void playAudio(String filepath) {
+
+    }
+
+    public void playNext() {
+
+    }
+
+          
+    public void pause() {
+
+    }
+
+    public void resume() {
+
+    }
+
+    public void replay() {
+
+    }
+
 }
