@@ -14,9 +14,9 @@ public class Song {
     private String filePath;
     private String genre;
     private int duration;
-    private int namePlaylist;
+    private String namePlaylist;
 
-    public Song(String songName, String artistName, String filePath, String genre, int duration, int namePlaylist) {
+    public Song(String songName, String artistName, String filePath, String genre, int duration, String namePlaylist) {
         this.songName = songName;
         this.artistName = artistName;
         this.filePath = filePath;
@@ -25,11 +25,11 @@ public class Song {
         this.namePlaylist = namePlaylist;
     }
 
-    public int getNamePlaylist() {
+    public String getNamePlaylist() {
         return namePlaylist;
     }
 
-    public void setNamePlaylist(int namePlaylist) {
+    public void setNamePlaylist(String namePlaylist) {
         this.namePlaylist = namePlaylist;
     }
 

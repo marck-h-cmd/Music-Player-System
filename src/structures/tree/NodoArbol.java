@@ -8,33 +8,33 @@ package structures.tree;
  *
  * @author CRISTHIAN
  */
-public class NodoArbol {
+public class NodoArbol<T> {
 
-    private int info;
-    private NodoArbol hi;
-    private NodoArbol hd;
+    private T info;
+    private NodoArbol<T> hi;
+    private NodoArbol<T> hd;
 
     public NodoArbol() {
 
     }
 
-    public NodoArbol(int x) {
+    public NodoArbol(T x) {
         info = x;
         hi = null;
         hd = null;
     }
 
-    public NodoArbol(int info, NodoArbol hi, NodoArbol hd) {
+    public NodoArbol(T info, NodoArbol hi, NodoArbol hd) {
         this.info = info;
         this.hi = hi;
         this.hd = hd;
     }
 
-    public int getInfo() {
+    public T getInfo() {
         return info;
     }
 
-    public void setInfo(int info) {
+    public void setInfo(T info) {
         this.info = info;
     }
 
