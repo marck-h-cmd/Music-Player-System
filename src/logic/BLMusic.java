@@ -10,6 +10,8 @@ import structures.linkedlist.ListaCircularDoble;
 import structures.node.NodoDoble;
 import structures.object.Song;
 import structures.stack.Pila;
+
+
 /**
  *
  * @author marck
@@ -83,10 +85,16 @@ public class BLMusic {
 
     }
 
-     //Alexis
-    public void resume() {
+     //Alexis    //Reanudar la cancion despues que ha sido pausada 
 
+    public void resume() {
+        try {
+            audioPlayer.resume();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error resuming song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
+
     
     //Jean Marko
     public Song searchSong(String nombre){
@@ -101,8 +109,26 @@ public class BLMusic {
     
     
 
-    //Alexis
+    //Alexis  //Reproducir la cancion desde el principio
     public void replay() {
+        try {
+            if (songList.getL() != null) {
+                NodoDoble<Song> currengSong = songList.getL();
+
+                if (audioPlayer!=null && audioPlayer.isPlaying()) {
+                    pause();
+
+                }   
+                    audioPlayer.stop();
+                    audioPlayer.play(currengSong.getInfo().getFilePath());
+                
+            } else {
+                JOptionPane.showMessageDialog(null, "Playlist is empty!");
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
 
     }
 
