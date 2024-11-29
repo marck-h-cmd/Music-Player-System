@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import structures.linkedlist.ListaCircularDoble;
 import structures.node.NodoDoble;
 import structures.object.Song;
+import structures.stack.Colas;
 import structures.stack.Pila;
 /**
  *
@@ -19,23 +20,31 @@ public class BLMusic {
     private BLAudioPlayer audioPlayer = new BLAudioPlayer();
     private Pila<Song> songStack = new Pila<>();
     private ListaCircularDoble<Song> songList = new ListaCircularDoble<>();
-    
+    private Colas<Song> queue = new Colas<>();
     
     // Pandaman
     public void addSongToPlaylist(Song song) {
-
-        
+        try{
+            if (audioPlayer.isPlaying){
+                queue.encolar(song);
+                songList.insertar(song);
+            }else{
+               JOptionPane.showMessageDialog(null, "The playlist is empty!"); 
+            }
+        }catch(Exception e){
+               JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
      // Marck
     public void loop() {
-
         
     }
 
      // Marck
     public void playAudio(String filepath) {
-
+        
+        
     }
 
      // Marck
