@@ -5,7 +5,10 @@
 package logic;
 
 import structures.object.*;
-
+import javax.swing.JOptionPane;
+import structures.linkedlist.ListaCircularDoble;
+import structures.node.NodoDoble;
+import structures.object.Song;
 import structures.stack.Pila;
 /**
  *
@@ -15,6 +18,7 @@ public class BLMusic {
 
     private BLAudioPlayer audioPlayer = new BLAudioPlayer();
     private Pila<Song> songStack = new Pila<>();
+    private ListaCircularDoble<Song> songList = new ListaCircularDoble<>();
     
     
     // Pandaman
@@ -37,10 +41,40 @@ public class BLMusic {
      // Marck
     public void playNext() {
 
+        try {
+            if (songList.getL() != null) {
+                if (!songStack.isEmpty()) {
+                    songStack.push((Song) songList.getL().getSgte().getInfo());
+                }
+                NodoDoble<Song> nextSong = songList.getL().getSgte();
+
+                audioPlayer.play(nextSong.getInfo().getFilePath());
+            } else {
+                JOptionPane.showMessageDialog(null, "Playlist is empty!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
     
      public void playPrevious() {
 
+          try {
+            if (songList.getL() != null) {
+                if (!songStack.isEmpty()) {
+                    songStack.push((Song) songList.getL().getAnt().getInfo());
+                }
+                NodoDoble<Song> previousSong = songList.getL().getAnt();
+
+                audioPlayer.play(previousSong.getInfo().getFilePath());
+            } else {
+                JOptionPane.showMessageDialog(null, "Playlist is empty!");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // Pandaman
