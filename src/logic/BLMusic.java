@@ -25,7 +25,7 @@ public class BLMusic {
     // Pandaman
     public void addSongToPlaylist(Song song) {
         try{
-            if (audioPlayer.isPlaying){
+            if (audioPlayer.isPlaying()){
                 queue.encolar(song);
                 songList.insertar(song);
             }else{
