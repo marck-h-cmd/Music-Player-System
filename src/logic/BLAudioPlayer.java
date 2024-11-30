@@ -60,4 +60,8 @@ public class BLAudioPlayer {
        public boolean isPlaying() {
         return clip != null && clip.isRunning();
        }
+       
+       public boolean isPaused(){
+           return clip != null && !clip.isActive() && clip.getMicrosecondPosition() > 0;
+       }
 }
