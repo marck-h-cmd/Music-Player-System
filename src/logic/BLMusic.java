@@ -4,13 +4,16 @@
  */
 package logic;
 
+import java.util.ArrayList;
 import structures.object.*;
 import javax.swing.JOptionPane;
 import structures.linkedlist.ListaCircularDoble;
+import structures.node.NodoArbol;
 import structures.node.NodoDoble;
 import structures.object.Song;
 import structures.stack.Colas;
 import structures.stack.Pila;
+import structures.tree.ArbolBB;
 
 
 /**
@@ -23,6 +26,9 @@ public class BLMusic {
     private Pila<Song> songStack = new Pila<>();
     private ListaCircularDoble<Song> songList = new ListaCircularDoble<>();
     private Colas<Song> queue = new Colas<>();
+    private ArbolBB<Song> songTree = new ArbolBB<>();
+    private ArbolBB<Playlist> playlistTree = new ArbolBB<>();
+    
     
     // Pandaman
     public void addSongToPlaylist(Song song) {
@@ -42,13 +48,13 @@ public class BLMusic {
     public void loop() {
         
     }
-
-     // Marck
+    
+    //Marck
     public void playAudio(String filepath) {
         
         
     }
-
+    
      // Marck
     public void playNext() {
 
@@ -117,13 +123,25 @@ public class BLMusic {
     
     //Jean Marko
     public Song searchSong(String nombre){
-        
-        
+        NodoArbol<Song> songNodo = new NodoArbol<>();
+        Song temporario = new Song(nombre, null, null, null, 0, null);
+        songNodo = songTree.buscar(temporario);
+        if(songNodo==null){
+            return null;
+        }else{
+            return temporario;
+        }   
     }
     
-     public Playlist searchPlaylist(String nombre){
-        
-        
+    public Playlist searchPlaylist(String nombre){
+        NodoArbol<Playlist> playlistNodo = new NodoArbol<>();
+        Playlist temp = new Playlist(nombre, new ArrayList<>(), 0.0, 0);
+        playlistNodo = playlistTree.buscar(temp);
+        if(playlistNodo==null){
+            return null;
+        }else{
+            return temp;
+        }   
     }
     
     
