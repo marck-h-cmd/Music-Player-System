@@ -73,6 +73,13 @@ public class ListaCircularDoble<T> {
 
         return c;
     }
+    
+    public void clear(){
+        NodoDoble<T> p = L.getSgte();
+        
+        while(p!=L.getSgte())
+            p=p.getSgte();
+    }
 
   
     
