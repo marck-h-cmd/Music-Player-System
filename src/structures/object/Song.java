@@ -8,15 +8,15 @@ package structures.object;
  *
  * @author marck
  */
-public class Song {
+public class Song implements Comparable<Song> {
     private String songName;
     private String artistName;
     private String filePath;
     private String genre;
-    private int duration;
+    private double duration;
     private String namePlaylist;
 
-    public Song(String songName, String artistName, String filePath, String genre, int duration, String namePlaylist) {
+    public Song(String songName, String artistName, String filePath, String genre, double duration, String namePlaylist) {
         this.songName = songName;
         this.artistName = artistName;
         this.filePath = filePath;
@@ -67,13 +67,17 @@ public class Song {
         this.genre = genre;
     }
 
-    public int getDuration() {
+    public double getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(double duration) {
         this.duration = duration;
     }
-    
+
+    @Override
+    public int compareTo(Song o) {
+        return this.songName.compareToIgnoreCase(o.getSongName());
+    }
     
 }
