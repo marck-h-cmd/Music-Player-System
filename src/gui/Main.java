@@ -3,22 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
-import java.awt.Color;
-import javax.swing.table.DefaultTableModel;
+import gui.colorCellTable.ColorInterleavedCell;
+import javax.swing.table.DefaultTableModel; 
 /**
  *
  * @author marck
  */
 public class Main extends javax.swing.JFrame {
     DefaultTableModel modelo = new DefaultTableModel();
+    ColorInterleavedCell c = new ColorInterleavedCell();
     
     public final void colorTable(){
-        
-        //Color myColor = new Color(255,255,208);
-        //tblSongs.setBackground(myColor);
+        c.HeaderTableColor(tblSongs);
+        for(int i=0;i<tblSongs.getColumnCount();i++){
+            tblSongs.getColumnModel().getColumn(i).setCellRenderer(c);
+        }
     }
-  
-
+    
+    
     /**
      * Creates new form Main
      */
@@ -161,19 +163,19 @@ public class Main extends javax.swing.JFrame {
         lblArtistName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblArtistName.setText("desconocido");
 
-        tblSongs.setBackground(new java.awt.Color(0, 204, 204));
-        tblSongs.setForeground(new java.awt.Color(255, 255, 255));
         tblSongs.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-
+                {"M"},
+                {"A"},
+                {"R"},
+                {"C"},
+                {"K"}
             },
             new String [] {
                 "Name Songs"
             }
         ));
-        tblSongs.setGridColor(new java.awt.Color(51, 0, 51));
-        tblSongs.setOpaque(false);
-        tblSongs.setSelectionBackground(new java.awt.Color(0, 204, 204));
+        tblSongs.setToolTipText("");
         jScrollPane1.setViewportView(tblSongs);
 
         jDesktopPane1.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -190,26 +192,23 @@ public class Main extends javax.swing.JFrame {
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jDesktopPane2)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                .addGap(82, 82, 82)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ctrlDiscPlayer)
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addGap(82, 82, 82)
-                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addComponent(ctrlDiscPlayer)
-                                .addGap(88, 88, 88)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addGap(53, 53, 53)
-                                .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(53, 53, 53)
+                        .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDesktopPane1Layout.createSequentialGroup()
-                            .addGap(116, 116, 116)
+                            .addGap(34, 34, 34)
                             .addComponent(lblText)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblArtistName))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDesktopPane1Layout.createSequentialGroup()
-                            .addGap(163, 163, 163)
+                            .addGap(81, 81, 81)
                             .addComponent(lblEstado))))
+                .addGap(88, 88, 88)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(264, Short.MAX_VALUE))
         );
         jDesktopPane1Layout.setVerticalGroup(
