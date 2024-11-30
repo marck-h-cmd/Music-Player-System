@@ -20,11 +20,11 @@ public class ColorInterleavedCell extends DefaultTableCellRenderer{
             boolean isSelected, boolean hasFocus, int row, int column){
         super.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
         if(evaluarPar(row)){
-            this.setBackground(Color.green);
+            this.setBackground(Color.LIGHT_GRAY);
             this.setForeground(Color.white);
         }else{
-            this.setBackground(Color.yellow);
-            this.setForeground(Color.blue);
+            this.setBackground(Color.cyan);
+            this.setForeground(Color.WHITE);
         }
         return this;
     }
@@ -39,7 +39,7 @@ public class ColorInterleavedCell extends DefaultTableCellRenderer{
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                c.setBackground(Color.RED); 
+                c.setBackground(Color.BLUE); 
                 c.setForeground(Color.YELLOW);   
                 c.setFont(new Font("Times New Roman", Font.BOLD, 20)); 
                 return c;
