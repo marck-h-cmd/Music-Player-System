@@ -19,6 +19,14 @@ public class Playlist {
     public Playlist() {
         this("NN",new ArrayList<>(),0.0,0);
     }
+
+    public Playlist(String name, double durationTotal, int numSongs) {
+        this.name = name;
+        this.durationTotal = durationTotal;
+        this.numSongs = numSongs;
+    }
+    
+    
     
     public Playlist(String name, ArrayList<Song> songs, double durationTotal, int numSongs) {
         this.name = name;

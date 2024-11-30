@@ -49,11 +49,11 @@ public class DALPlaylist {
         ArrayList<Playlist> obj = new ArrayList<>();
         try {
             cn = Conexion.realizarConexion();
-            sql = "{call sp_listar_clientes()}";
+            sql = "{call sp_listar_playlist()}";
             cs = cn.prepareCall(sql);
             rs = cs.executeQuery();
             while (rs.next()) {
-           //     obj.add(new Playlist(rs.getString(1), rs.getString(2) , rs.getString(3), rs.getString(4), Integer.parseInt(rs.getString(5)), rs.getString(6)));
+               obj.add(new Playlist(rs.getString(1), rs.getInt(2) , rs.getInt(3)));
             }
             
         } catch (ClassNotFoundException | SQLException ex) {
