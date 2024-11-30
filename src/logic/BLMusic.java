@@ -87,9 +87,19 @@ public class BLMusic {
     }
 
     // Pandaman
- 
     public void pause() {
-
+        try{
+            if (audioPlayer.isPlaying()){// si  clip !=null && clip.isRunning
+                audioPlayer.pause();
+            }else{
+               // si clip!= null && audioPlayer.getIsPaused==true 
+               audioPlayer.resume();
+               //Si clip es null
+               //pause no hace nada 
+            }
+        }catch(Exception e){
+               JOptionPane.showMessageDialog(null, "Error  playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
      //Alexis
