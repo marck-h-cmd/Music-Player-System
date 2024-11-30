@@ -4,10 +4,12 @@
  */
 package logic;
 
+import structures.object.Playlist;
+
 /**
  *
  * @author marck
  */
 public class BLPlaylist {
-    
+
 }
