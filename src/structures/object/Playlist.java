@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author marck
  */
-public class Playlist {
+public class Playlist implements Comparable<Playlist>{
     private String name;
     private ArrayList<Song> songs;
     private double durationTotal;
@@ -19,6 +19,14 @@ public class Playlist {
     public Playlist() {
         this("NN",new ArrayList<>(),0.0,0);
     }
+
+    public Playlist(String name, double durationTotal, int numSongs) {
+        this.name = name;
+        this.durationTotal = durationTotal;
+        this.numSongs = numSongs;
+    }
+    
+    
     
     public Playlist(String name, ArrayList<Song> songs, double durationTotal, int numSongs) {
         this.name = name;
@@ -57,5 +65,10 @@ public class Playlist {
 
     public void setNumSongs(int numSongs) {
         this.numSongs = numSongs;
+    }
+
+    @Override
+    public int compareTo(Playlist o) {
+        return this.name.compareToIgnoreCase(o.getName());
     }
 }

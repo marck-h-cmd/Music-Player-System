@@ -56,4 +56,8 @@ public class BLAudioPlayer {
             clip.close();
         }
     }
+    
+       public boolean isPlaying() {
+        return clip != null && clip.isRunning();
+       }
 }

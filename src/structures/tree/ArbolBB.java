@@ -5,7 +5,7 @@
 package structures.tree;
 
 import javax.swing.DefaultListModel;
-
+import structures.node.NodoArbol;
 /**
  *
  * @author CRISTHIAN
@@ -31,9 +31,9 @@ public class ArbolBB<T extends Comparable<T>> {
         if (r == null) {
             r = new NodoArbol(x);
         } else if (x.compareTo(r.getInfo()) < 0) {
-            r.setHi(inserta(x, r.getHi()));
+            r.setIzquierdo(inserta(x,r.getIzquierdo()));
         } else if (x.compareTo(r.getInfo()) > 0) {
-            r.setHd(inserta(x, r.getHd()));
+            r.setDerecho(inserta(x,r.getDerecho()));
         }
 
         return r;
@@ -43,14 +43,14 @@ public class ArbolBB<T extends Comparable<T>> {
         return buscar(x, raiz);
     }
 
-    public NodoArbol buscar(T x, NodoArbol<T> r) {
+    private NodoArbol buscar(T x, NodoArbol<T> r) {
         if (r != null) {
             if (x == r.getInfo()) {
                 return r;
             } else if (x.compareTo(r.getInfo()) < 0) {
-                return buscar(x, r.getHi());
+                return buscar(x,r.getIzquierdo());
             } else {
-                return buscar(x, r.getHd());
+                return buscar(x,r.getDerecho());
             }
         } else {
             return null;
@@ -65,8 +65,8 @@ public class ArbolBB<T extends Comparable<T>> {
     private void preOrden(NodoArbol<T> r, DefaultListModel modelo) {
         if (r != null) {
             modelo.addElement(r.getInfo());
-            preOrden(r.getHi(), modelo);
-            preOrden(r.getHd(), modelo);
+            preOrden(r.getIzquierdo(),modelo);
+            preOrden(r.getDerecho(),modelo);
         }
     }
 
@@ -77,9 +77,9 @@ public class ArbolBB<T extends Comparable<T>> {
 
     private void enOrden(NodoArbol<T> r, DefaultListModel modelo) {
         if (r != null) {
-            enOrden(r.getHi(), modelo);
+            enOrden(r.getIzquierdo(),modelo);
             modelo.addElement(r.getInfo());
-            enOrden(r.getHd(), modelo);
+            enOrden(r.getDerecho(),modelo);
         }
     }
 
@@ -90,8 +90,8 @@ public class ArbolBB<T extends Comparable<T>> {
 
     private void postOrden(NodoArbol<T> r, DefaultListModel modelo) {
         if (r != null) {
-            postOrden(r.getHi(), modelo);
-            postOrden(r.getHd(), modelo);
+            postOrden(r.getIzquierdo(),modelo);
+            postOrden(r.getDerecho(),modelo);
             modelo.addElement(r.getInfo());
         }
     }
@@ -102,10 +102,10 @@ public class ArbolBB<T extends Comparable<T>> {
 
     private T buscarMax(NodoArbol<T> r) {
         T x;
-        if (r.getHd() == null) {
+        if (r.getDerecho() == null) {
             x = r.getInfo();
         } else {
-            x = (T) buscarMax(r.getHd());
+            x = (T) buscarMax(r.getDerecho());
         }
         return x;
     }
@@ -116,10 +116,10 @@ public class ArbolBB<T extends Comparable<T>> {
 
     private T buscarMin(NodoArbol<T> r) {
         T x;
-        if (r.getHi() == null) {
+        if (r.getIzquierdo() == null) {
             x = r.getInfo();
         } else {
-            x = (T) buscarMin(r.getHi());
+            x = (T) buscarMin(r.getIzquierdo());
         }
         return x;
     }
@@ -132,7 +132,7 @@ public class ArbolBB<T extends Comparable<T>> {
         if (r == null) {
             return 0;
         } else {
-            return 1 + contar(r.getHi()) + contar(r.getHd());
+            return 1 + contar(r.getIzquierdo()) + contar(r.getDerecho());
         }
     }
 
@@ -144,10 +144,10 @@ public class ArbolBB<T extends Comparable<T>> {
         if (r == null) {
             return 0;
         }
-        if (r.getHi() == null && r.getHd() == null) {
+        if (r.getIzquierdo() == null && r.getDerecho() == null) {
             return 1;
         } else {
-            return numeroHojas(r.getHi()) + numeroHojas(r.getHd());
+            return numeroHojas(r.getIzquierdo()) + numeroHojas(r.getDerecho());
         }
     }
 
@@ -156,10 +156,10 @@ public class ArbolBB<T extends Comparable<T>> {
     }
 
     private NodoArbol eliminarMin(NodoArbol r) {
-        if (r.getHi() == null) {
-            r = r.getHd();
+        if (r.getIzquierdo() == null) {
+            r = r.getDerecho();
         } else {
-            r.setHi(eliminarMin(r.getHi()));
+            r.setIzquierdo(eliminarMin(r.getIzquierdo()));
         }
         return r;
 
@@ -172,16 +172,16 @@ public class ArbolBB<T extends Comparable<T>> {
     private NodoArbol<T> elimina(T x, NodoArbol<T> r) {
         if (r != null) {
             if (x.compareTo(r.getInfo()) < 0) {
-                r.setHi(elimina(x, r.getHi()));
+                r.setIzquierdo(elimina(x,r.getIzquierdo()));
             } else if (x.compareTo(r.getInfo()) > 0) {
-                r.setHd(elimina(x, r.getHd()));
-            } else if (r.getHi() == null) {
-                r = r.getHd();
-            } else if (r.getHd() == null) {
-                r = r.getHi();
+                r.setDerecho(elimina(x, r.getDerecho()));
+            } else if (r.getIzquierdo() == null) {
+                r = r.getDerecho();
+            } else if (r.getDerecho() == null) {
+                r = r.getIzquierdo();
             } else {
-                r.setInfo((T) buscarMin(r.getHd()));
-                r.setHd(eliminarMin(r.getHd()));
+                r.setInfo((T) buscarMin(r.getDerecho()));
+                r.setDerecho(eliminarMin(r.getDerecho()));
 
             }
         }
@@ -198,8 +198,8 @@ public class ArbolBB<T extends Comparable<T>> {
         if (r == null) {
             return -1;
         } else {
-            ahi = 1 + alturaArbol(r.getHi());
-            ahd = 1 + alturaArbol(r.getHd());
+            ahi = 1 + alturaArbol(r.getIzquierdo());
+            ahd = 1 + alturaArbol(r.getDerecho());
             if (ahi > ahd) {
                 return ahi;
             } else {
@@ -222,8 +222,8 @@ public class ArbolBB<T extends Comparable<T>> {
         if (r == null) {
             return -1;
         } else {
-            int alturaIzquierda = alturaNodo(r.getHi());
-            int alturaDerecha = alturaNodo(r.getHd());
+            int alturaIzquierda = alturaNodo(r.getIzquierdo());
+            int alturaDerecha = alturaNodo(r.getDerecho());
             return 1 + Math.max(alturaIzquierda, alturaDerecha);
         }
     }
@@ -237,8 +237,8 @@ public class ArbolBB<T extends Comparable<T>> {
             return 0;
         } else {
             return profundidadActual
-                    + profundidadTotal(r.getHi(), profundidadActual + 1)
-                    + profundidadTotal(r.getHd(), profundidadActual + 1);
+                    + profundidadTotal(r.getIzquierdo(), profundidadActual + 1)
+                    + profundidadTotal(r.getDerecho(), profundidadActual + 1);
         }
     }
 }
