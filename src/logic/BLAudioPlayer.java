@@ -64,4 +64,20 @@ public class BLAudioPlayer {
        public boolean isPaused(){
            return clip != null && !clip.isActive() && clip.getMicrosecondPosition() > 0;
        }
+       
+       public static double getDuration(String filePath) {
+        try {
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            long frameLength = audioStream.getFrameLength();
+            float frameRate = format.getFrameRate();
+
+            return (double) ((frameLength / frameRate) * 1000);
+
+        } catch (UnsupportedAudioFileException | IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return -1;
+    }
 }
