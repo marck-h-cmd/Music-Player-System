@@ -159,6 +159,7 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
        mostrar(model);
        txtName.setText("");
        txtName.requestFocus();
+       //aña
     }//GEN-LAST:event_btnRegisterActionPerformed
 
 
