@@ -20,11 +20,15 @@ public class ListaCircular<T> {
         L = null;
     }
 
+    public Nodo<T> getL() {
+        return L;
+    }
+    
     public boolean esVacia() {
         return L == null;
     }
 
-    public void inserta(int x) {
+    public void inserta(T x) {
         Nodo nuevo = new Nodo(x);
 
         if (L == null) {
