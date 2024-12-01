@@ -3,20 +3,40 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package gui.internalFrames;
+import javax.swing.table.DefaultTableModel;
+import structures.linkedlist.ListaCircular;
+import structures.node.Nodo;
+import structures.object.*;
 
 /**
  *
  * @author PANDAMAN
  */
 public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
-
+    private ListaCircular<Playlist> playlist = new ListaCircular<>();
+    private DefaultTableModel model = new DefaultTableModel();
     /**
      * Creates new form InfRegisterPlatlist
      */
     public InfRegisterPlaylist() {
         initComponents();
     }
-
+    
+    private void mostrar(DefaultTableModel modelo){
+        int c=0;
+        Nodo<Playlist> p=playlist.getL();
+        Object datos[][] = new Object[playlist.contar()][3];
+        String titulo[] = {"NOMBRE","NÚMERO DE CANCIONES","DURACIÓN TOTAL"};
+        do{
+            datos[c][0] = p.getInfo().getName();
+            datos[c][1]= p.getInfo().getNumSongs();
+            datos[c][2]=p.getInfo().getDurationTotal();
+            c++;
+            p=p.getSgte();
+        }while(p!=playlist.getL());
+        modelo.setDataVector(datos, titulo);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -75,21 +95,16 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
 
         txtName.setBorder(javax.swing.BorderFactory.createTitledBorder("Nombre de la Lista"));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        jTable1.setModel(model);
         jScrollPane1.setViewportView(jTable1);
 
         btnRegister.setText("Registrar");
         btnRegister.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegisterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout backgroundLayout = new javax.swing.GroupLayout(background);
         background.setLayout(backgroundLayout);
@@ -137,6 +152,15 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
         dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
+       name = txtName.getText();
+       Playlist newPlaylist = new Playlist(name);
+       playlist.inserta(newPlaylist);
+       mostrar(model);
+       txtName.setText("");
+       txtName.requestFocus();
+    }//GEN-LAST:event_btnRegisterActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
@@ -148,4 +172,5 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
+    private String name;
 }
