@@ -38,4 +38,8 @@ public class BLSong {
     public static ArrayList<Song> list() {
         return DALSong.list();
     }
+    
+      public static ArrayList<Song> listByPlaylist(String playlist) {
+        return DALSong.listByPlaylist(playlist);
+    }
 }

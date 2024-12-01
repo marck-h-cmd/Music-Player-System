@@ -70,4 +70,31 @@ public class DALSong {
         }
         return obj;
     }
+     
+     public static ArrayList<Song> listByPlaylist(String playlist) {
+        String sql;
+        ArrayList<Song> obj = new ArrayList<>();
+        try {
+            cn = Conexion.realizarConexion();
+            sql = "{call sp_listar_song()}";
+            cs = cn.prepareCall(sql);
+              cs.setString(1, playlist);
+            rs = cs.executeQuery();
+            while (rs.next()) {
+                obj.add(new Song(rs.getString(2), rs.getString(3) , rs.getString(4), rs.getString(5), Integer.parseInt(rs.getString(6)), rs.getString(7)));
+            }
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(), "Error", 0);
+        } finally {
+            try {
+                rs.close();
+                cs.close();
+                cn.close();
+            } catch (SQLException ex) {
+                showMessageDialog(null, ex.getMessage(), "Error", 0);
+            }
+        }
+        return obj;
+    }
 }
