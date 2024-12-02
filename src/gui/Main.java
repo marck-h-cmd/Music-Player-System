@@ -5,7 +5,7 @@
 package gui;
 
 import gui.colorCellTable.ColorInterleavedCell;
-import gui.internalFrames.InfRegisterSong;
+import gui.internalFrames.*;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.table.DefaultTableModel;
@@ -32,6 +32,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         colorTable();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -226,7 +227,7 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(lblText)
                                 .addGap(46, 46, 46)
                                 .addComponent(lblArtistName)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 216, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
             .addGroup(dspFondoLayout.createSequentialGroup()
@@ -249,7 +250,7 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(ctrlDiscPlayer)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblEstado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                         .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblText)
                             .addComponent(lblArtistName))
@@ -333,11 +334,15 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dspFondo)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(dspFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dspFondo)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(dspFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -354,7 +359,8 @@ public class Main extends javax.swing.JFrame {
     
     
     private void mniPlaylistsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPlaylistsActionPerformed
-        // TODO add your handling code here:
+        InfRegisterPlaylist tab = new InfRegisterPlaylist();
+        centrarInternalFrame(tab);
     }//GEN-LAST:event_mniPlaylistsActionPerformed
 
     private void mniAddPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAddPlaylistActionPerformed
@@ -363,6 +369,8 @@ public class Main extends javax.swing.JFrame {
 
     private void mniDisplaySongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDisplaySongsActionPerformed
         // TODO add your handling code here:
+        InfShowSongs tab = new InfShowSongs();
+        centrarInternalFrame(tab);
     }//GEN-LAST:event_mniDisplaySongsActionPerformed
 
     private void ctrlRandomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlRandomMouseClicked

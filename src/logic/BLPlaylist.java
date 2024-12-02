@@ -4,6 +4,9 @@
  */
 package logic;
 
+import data.DALPlaylist;
+import java.util.ArrayList;
+import static javax.swing.JOptionPane.showMessageDialog;
 import structures.object.Playlist;
 
 /**
@@ -12,4 +15,27 @@ import structures.object.Playlist;
  */
 public class BLPlaylist {
 
+       private static Playlist obj;
+
+    public static int insertar(String name, double durationTotal, int numSongs) {
+        String mensaje = null;
+        if ( name.trim().length() > 0
+                &&  durationTotal>0) {
+                obj = new Playlist( name, durationTotal, numSongs);
+                mensaje = DALPlaylist.insert(obj);
+                if (mensaje == null) {
+                    return 0;
+                } else {
+                    showMessageDialog(null, mensaje, "Error", 0);
+                    return 1;
+                } 
+        } else {
+            showMessageDialog(null, "Datos no validos", "Error", 0);
+            return 3;
+        }
+    }
+    
+    public static ArrayList<Playlist> list() {
+        return DALPlaylist.list();
+    }
 }
