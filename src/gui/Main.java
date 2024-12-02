@@ -369,6 +369,8 @@ public class Main extends javax.swing.JFrame {
 
     private void mniDisplaySongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDisplaySongsActionPerformed
         // TODO add your handling code here:
+        InfShowSongs tab = new InfShowSongs();
+        centrarInternalFrame(tab);
     }//GEN-LAST:event_mniDisplaySongsActionPerformed
 
     private void ctrlRandomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlRandomMouseClicked
