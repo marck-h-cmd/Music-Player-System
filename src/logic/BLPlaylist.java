@@ -20,7 +20,7 @@ public class BLPlaylist {
     public static int insertar(String name, double durationTotal, int numSongs) {
         String mensaje = null;
         if ( name.trim().length() > 0
-                &&  durationTotal>0) {
+               ) {
                 obj = new Playlist( name, durationTotal, numSongs);
                 mensaje = DALPlaylist.insert(obj);
                 if (mensaje == null) {

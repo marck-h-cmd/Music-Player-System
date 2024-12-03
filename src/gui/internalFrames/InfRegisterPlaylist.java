@@ -4,6 +4,7 @@
  */
 package gui.internalFrames;
 import javax.swing.table.DefaultTableModel;
+import logic.BLPlaylist;
 import structures.linkedlist.ListaCircular;
 import structures.node.Nodo;
 import structures.object.*;
@@ -154,9 +155,9 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
 
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
        name = txtName.getText();
-       Playlist newPlaylist = new Playlist(name);
-       playlist.inserta(newPlaylist);
-       mostrar(model);
+      
+       BLPlaylist.insertar(name, 0, 0);
+      // mostrar(model);
        txtName.setText("");
        txtName.requestFocus();
        //aña

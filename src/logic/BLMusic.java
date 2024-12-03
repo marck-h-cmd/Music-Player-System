@@ -40,6 +40,19 @@ public class BLMusic {
         }
     }
 
+    public Pila<Song> getSongStack() {
+        return songStack;
+    }
+
+    public ListaCircularDoble<Song> getSongList() {
+        return songList;
+    }
+
+    public Colas<Song> getQueue() {
+        return queue;
+    }
+
+    
     // Marck
     public void loop() {
 
@@ -70,7 +83,7 @@ public class BLMusic {
     }
 
     //Marck
-    public void playAudio(String filepath) {
+    public void playAudio() {
         try {
             if (songList.getL() != null) {
 

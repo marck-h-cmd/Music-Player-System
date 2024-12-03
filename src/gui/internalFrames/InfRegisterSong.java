@@ -5,9 +5,14 @@
 package gui.internalFrames;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JFileChooser;
 import logic.BLAudioPlayer;
+import logic.BLPlaylist;
 import logic.BLSong;
+import structures.object.Playlist;
+import structures.object.Song;
 
 /**
  *
@@ -20,6 +25,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
      */
     public InfRegisterSong() {
         initComponents();
+        llenarCbx() ;
     }
 
     /**
@@ -273,7 +279,8 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         name = txtName.getText();
         artist = txtArtist.getText();
         genre = cbxGenre.getSelectedItem().toString();
-        playlist = cbxPlaylist.getSelectedItem().toString();
+        playlist = String.valueOf(cbxPlaylist.getSelectedItem());
+        System.out.println(playlist);
         path = txtPath.getText();
         
         duration = BLAudioPlayer.getDuration(path);
@@ -296,6 +303,16 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         this.dispose();
     }//GEN-LAST:event_ctrlCloseMouseClicked
 
+    private void llenarCbx() {
+        list = BLPlaylist.list();
+        iterator = list.iterator();
+        while(iterator.hasNext()) {
+            obj = iterator.next();
+           
+            cbxPlaylist.addItem(obj.getName());
+        }
+      
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel background;
@@ -317,4 +334,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPath;
     // End of variables declaration//GEN-END:variables
+    private Iterator<Playlist> iterator;
+    private Playlist obj;
+     private ArrayList<Playlist> list;
 }

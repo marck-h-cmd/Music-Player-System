@@ -32,6 +32,8 @@ public class Playlist implements Comparable<Playlist>{
     
     
     
+    
+    
     public Playlist(String name, ArrayList<Song> songs, double durationTotal, int numSongs) {
         this.name = name;
         this.songs = songs;
