@@ -23,12 +23,12 @@ public class DALPlaylist {
         String mensaje = null, sql;
         try {
             cn = Conexion.realizarConexion();
-            sql = "{call sp_insertar_song(?, ?, ?, ?, ?, ?)}";
+            sql = "{call sp_insert_playlist(?, ?, ?)}";
             cs = cn.prepareCall(sql);
             cs.setString(1, obj.getName());
             cs.setString(2, String.valueOf(obj.getNumSongs()));
             cs.setString(3,String.valueOf(obj.getDurationTotal()) );
-            cs.setString(4, String.valueOf(obj.getNumSongs()));   
+ 
             cs.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {
             mensaje = ex.getMessage();
@@ -49,7 +49,7 @@ public class DALPlaylist {
         ArrayList<Playlist> obj = new ArrayList<>();
         try {
             cn = Conexion.realizarConexion();
-            sql = "{call sp_listar_playlist()}";
+            sql = "{call sp_list_playlist()}";
             cs = cn.prepareCall(sql);
             rs = cs.executeQuery();
             while (rs.next()) {
