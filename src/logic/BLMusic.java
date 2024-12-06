@@ -52,7 +52,10 @@ public class BLMusic {
         return queue;
     }
 
-    
+    public BLAudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
+ 
     // Marck
     public void loop() {
 
@@ -83,64 +86,89 @@ public class BLMusic {
     }
 
     //Marck
-    public void playAudio() {
+    public NodoDoble<Song> playAudio() {
         try {
             if (songList.getL() != null) {
 
-                NodoDoble<Song> currentSongNode = songList.getL();
+                NodoDoble<Song> currentSongNode = songList.getL().getSgte();
+                NodoDoble<Song> nextSongNode = currentSongNode.getSgte();
                 songStack.push(currentSongNode.getInfo());
                 audioPlayer.play(currentSongNode.getInfo().getFilePath());
+              
+               songList.getL().setSgte( nextSongNode);
+                queue.desencolar();
+                return currentSongNode;
             } else {
                 JOptionPane.showMessageDialog(null, "Playlist is empty!");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        return null;
 
     }
 
     // Marck
-    public void playNext() {
+    public NodoDoble<Song> playNext() {
 
         try {
             if (songList.getL() != null) {
-                NodoDoble<Song> currentSongNode = songList.getL();
+                NodoDoble<Song> currentSongNode = songList.getL().getSgte();
                 NodoDoble<Song> nextSongNode = currentSongNode.getSgte();
 
                 if (!songStack.isEmpty()) 
                     songStack.push(currentSongNode.getInfo());
                 
 
-                audioPlayer.play(nextSongNode.getInfo().getFilePath());
+                audioPlayer.play(currentSongNode.getInfo().getFilePath());
+        
+                songList.getL().setSgte( nextSongNode);
+                 queue.desencolar();
+                return currentSongNode;
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Playlist is empty!");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        return null;
 
     }
 
-    public void playPrevious() {
+    public NodoDoble<Song>  playPrevious() {
 
         try {
             if (songList.getL() != null) {
-                NodoDoble<Song> currentSongNode = songList.getL();
+                NodoDoble<Song> currentSongNode = songList.getL().getSgte();
 
-                NodoDoble<Song> previousSongNode = currentSongNode.getAnt();
+               // NodoDoble<Song> previousSongNode = currentSongNode.getAnt();
+                
+                Song song = songStack.pop();
+                System.out.println(song.getSongName());
+                NodoDoble<Song> nodoAnterior = new NodoDoble(song);
+                
 
                 if (!songStack.isEmpty()) 
                     songStack.push(currentSongNode.getInfo());
                 
+                songList.getL().setSgte(nodoAnterior);
+                nodoAnterior.setSgte(currentSongNode);
+                currentSongNode.setAnt(nodoAnterior);
+                queue.encolar(song);
+             
+                
 
-                audioPlayer.play(previousSongNode.getInfo().getFilePath());
+                audioPlayer.play(nodoAnterior.getInfo().getFilePath());
+                 return nodoAnterior;
             } else {
-                JOptionPane.showMessageDialog(null, "Playlist is empty!");
+                System.out.println("Playlist is empty!");
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        return null;
     }
 
     // Pandaman
