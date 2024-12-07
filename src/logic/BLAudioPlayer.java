@@ -57,15 +57,15 @@ public class BLAudioPlayer {
         }
     }
     
-       public boolean isPlaying() {
-        return clip != null && clip.isRunning();
-       }
+   public boolean isPlaying() {
+    return clip != null && clip.isRunning();
+   }
        
-       public boolean isPaused(){
-           return clip != null && !clip.isActive() && clip.getMicrosecondPosition() > 0;
-       }
+   public boolean isPaused(){
+       return clip != null && !clip.isActive() && clip.getMicrosecondPosition() > 0;
+   }
        
-       public static double getDuration(String filePath) {
+   public static double getDuration(String filePath) {
         try {
             File audioFile = new File(filePath);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
@@ -79,5 +79,13 @@ public class BLAudioPlayer {
             System.out.println("Error: " + e.getMessage());
         }
         return -1;
+    }
+       
+    public static String getMinSeg(double time){
+        double seg = time/1000;
+        int minutos = (int)seg/60;
+        int segRes = (int)seg%60;
+        
+        return minutos + ":" + (segRes < 10 ? "0" + segRes : segRes);
     }
 }

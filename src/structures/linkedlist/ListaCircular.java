@@ -28,7 +28,7 @@ public class ListaCircular<T> {
         return L == null;
     }
 
-    public void inserta(T x) {
+    public void insertar(T x) {
         Nodo nuevo = new Nodo(x);
 
         if (L == null) {
@@ -40,7 +40,8 @@ public class ListaCircular<T> {
             L = nuevo;
         }
     }
-
+    
+    
     public Nodo<T> buscar(T x) {
         if (esVacia()) {
             return null;

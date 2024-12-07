@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
 import logic.BLMusic;
 import logic.BLPlaylist;
 import logic.BLSong;
@@ -525,7 +526,8 @@ public class Main extends javax.swing.JFrame {
 
             datos[i][0] = p.getInfo().getSongName();
             datos[i][1] = p.getInfo().getArtistName();
-            datos[i][2] = p.getInfo().getDuration();
+            double time = p.getInfo().getDuration();
+            datos[i][2] = BLAudioPlayer.getMinSeg(time);
             datos[i][3] = p.getInfo().getGenre();
             i++;
             p = p.getSgte();
