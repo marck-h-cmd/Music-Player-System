@@ -432,39 +432,42 @@ public class Main extends javax.swing.JFrame {
     private void ctrlNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlNextMouseClicked
         // TODO add your handling code here:
 
-       NodoDoble<Song> nodo =  track.playNext();
-       
-       setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName());
-       mostrar(modelo);
+        NodoDoble<Song> nodo = track.playNext();
+
+        setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName());
+        mostrar(modelo);
     }//GEN-LAST:event_ctrlNextMouseClicked
 
     private void ctrlPauseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPauseMouseClicked
         // TODO add your handling code here:
-        try{
-              clickCounter++;
-        if (clickCounter % 2 != 0) {
+        try {
+            clickCounter++;
+            if (clickCounter % 2 != 0) {
 
-           NodoDoble<Song> nodo = track.playAudio();
-          
-            setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName());
+                if (!track.getAudioPlayer().isPaused()) {
+                    NodoDoble<Song> nodo = track.playAudio();
+                    setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName());
+                } else {
+                    track.getAudioPlayer().resume();
+                }
 
-            
-            ctrlPause.setIcon(new ImageIcon("src/assets/img/controls/control-pause.png"));
-            ctrlDiscPlayer.setIcon(new ImageIcon("src/assets/img/controls/disc60%.gif"));
-            mostrar(modelo);
-        } else {
-            track.pause();
-
-            ctrlPause.setIcon(new ImageIcon("src/assets/img/controls/control-play.png"));
-            ctrlDiscPlayer.setIcon(new ImageIcon("src/assets/img/controls/disc.png"));
+                setIcons("src/assets/img/controls/control-pause.png","src/assets/img/controls/disc60%.gif");
+                mostrar(modelo);
+            } else {
+                track.pause();
+                setIcons("src/assets/img/controls/control-play.png","src/assets/img/controls/disc.png");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Playlist is empty!");
         }
-        }catch(Exception e){
-                JOptionPane.showMessageDialog(null, "Playlist is empty!");
-        }
-      
+
 
     }//GEN-LAST:event_ctrlPauseMouseClicked
 
+    public void setIcons(String pausePath, String disc){
+        ctrlPause.setIcon(new ImageIcon(pausePath));
+        ctrlDiscPlayer.setIcon(new ImageIcon(disc));
+    }
     private void ctrlPreviousMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPreviousMouseClicked
         // TODO add your handling code here:
 
@@ -482,9 +485,9 @@ public class Main extends javax.swing.JFrame {
 
         String playlist = cbxPlaylist.getSelectedItem().toString();
 
-        if (!track.getQueue().isEmpty()) 
+        if (!track.getQueue().isEmpty()) {
             track.clearTrack();
-        
+        }
 
         songs = BLSong.listByPlaylist(playlist);
         System.out.println(songs.toString());
@@ -499,7 +502,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCargarActionPerformed
 
     public void setTextContent(String songN, String artist) {
-        lblSong.setText( songN);
+        lblSong.setText(songN);
         lblArtistName.setText(artist);
 
     }

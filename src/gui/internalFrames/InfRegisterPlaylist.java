@@ -4,9 +4,12 @@
  */
 package gui.internalFrames;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
 import logic.BLPlaylist;
+import logic.BLSong;
 import structures.linkedlist.ListaCircular;
 import structures.node.Nodo;
 import structures.object.*;
@@ -32,8 +35,8 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
         String titulo[] = {"NOMBRE","NÚMERO DE CANCIONES","DURACIÓN TOTAL"};
         do{
             datos[c][0] = p.getInfo().getName();
-            datos[c][1]= p.getInfo().getNumSongs();
-            datos[c][2]=p.getInfo().getDurationTotal();
+            datos[c][1]= getNumeroCanciones(p.getInfo().getName());
+            datos[c][2]=getDuracionTotal(p.getInfo().getName()) ; 
             c++;
             p=p.getSgte();
         }while(p!=playlist.getL().getSgte());
@@ -173,6 +176,23 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
         dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    public int getNumeroCanciones(String playlist){  
+        return BLSong.listByPlaylist(playlist).size();       
+    }
+    
+    public String getDuracionTotal(String playlist){
+         songs= BLSong.listByPlaylist(playlist);   
+         Song song;
+         double total=0;
+        iterator = songs.iterator();
+        while (iterator.hasNext()) {
+            song= iterator.next();
+            total+= song.getDuration();
+        }
+        return BLAudioPlayer.getMinSeg(total);
+          
+            
+    }
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
        try{
             name = txtName.getText();
@@ -208,4 +228,7 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
     private String name;
+    private Iterator<Song> iterator;
+    private ArrayList<Song> songs;
+    
 }
