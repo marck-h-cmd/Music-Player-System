@@ -3,8 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JInternalFrame.java to edit this template
  */
 package gui.internalFrames;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
 import logic.BLPlaylist;
+import logic.BLSong;
 import structures.linkedlist.ListaCircular;
 import structures.node.Nodo;
 import structures.object.*;
@@ -14,7 +19,7 @@ import structures.object.*;
  * @author PANDAMAN
  */
 public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
-    private ListaCircular<Playlist> playlist = new ListaCircular<>();
+    private ListaCircular<Playlist> playlist = BLPlaylist.getList();
     private DefaultTableModel model = new DefaultTableModel();
     /**
      * Creates new form InfRegisterPlatlist
@@ -25,18 +30,18 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
     
     private void mostrar(DefaultTableModel modelo){
         int c=0;
-        Nodo<Playlist> p=playlist.getL();
+        Nodo<Playlist> p=playlist.getL().getSgte();
         Object datos[][] = new Object[playlist.contar()][3];
         String titulo[] = {"NOMBRE","NÚMERO DE CANCIONES","DURACIÓN TOTAL"};
         do{
             datos[c][0] = p.getInfo().getName();
-            datos[c][1]= p.getInfo().getNumSongs();
-            datos[c][2]=p.getInfo().getDurationTotal();
+            datos[c][1]= getNumeroCanciones(p.getInfo().getName());
+            datos[c][2]=getDuracionTotal(p.getInfo().getName()) ; 
             c++;
             p=p.getSgte();
-        }while(p!=playlist.getL());
+        }while(p!=playlist.getL().getSgte());
         modelo.setDataVector(datos, titulo);
-    }
+    }  
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,6 +60,24 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnRegister = new javax.swing.JButton();
+
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+        });
 
         background.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -153,15 +176,45 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
         dispose();
     }//GEN-LAST:event_jLabel1MouseClicked
 
+    public int getNumeroCanciones(String playlist){  
+        return BLSong.listByPlaylist(playlist).size();       
+    }
+    
+    public String getDuracionTotal(String playlist){
+         songs= BLSong.listByPlaylist(playlist);   
+         Song song;
+         double total=0;
+        iterator = songs.iterator();
+        while (iterator.hasNext()) {
+            song= iterator.next();
+            total+= song.getDuration();
+        }
+        return BLAudioPlayer.getMinSeg(total);
+          
+            
+    }
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
-       name = txtName.getText();
-      
-       BLPlaylist.insertar(name, 0, 0);
-      // mostrar(model);
-       txtName.setText("");
-       txtName.requestFocus();
-       //aña
+       try{
+            name = txtName.getText();
+            if(BLPlaylist.insertar(name, 0, 0)!=3){
+                Playlist obj = new Playlist(name);
+                playlist.insertar(obj);
+                mostrar(model);
+            }else{
+                 throw new Exception("Ingrese el nombre de la playlist");       
+            }
+        }catch(Exception e){
+                JOptionPane.showMessageDialog(null, e, "Error", JOptionPane.ERROR_MESSAGE);
+        }finally{
+            txtName.setText("");
+            txtName.requestFocus();
+        }
     }//GEN-LAST:event_btnRegisterActionPerformed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+
+        mostrar(model);
+    }//GEN-LAST:event_formInternalFrameOpened
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -175,4 +228,7 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
     private String name;
+    private Iterator<Song> iterator;
+    private ArrayList<Song> songs;
+    
 }

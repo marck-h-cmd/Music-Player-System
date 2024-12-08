@@ -176,6 +176,7 @@
                 <StringItem index="2" value="Electronica"/>
                 <StringItem index="3" value="Tongo"/>
                 <StringItem index="4" value="Rock"/>
+                <StringItem index="5" value="Villancicos"/>
               </StringArray>
             </Property>
           </Properties>

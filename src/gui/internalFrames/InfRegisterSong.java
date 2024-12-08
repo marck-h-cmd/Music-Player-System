@@ -100,7 +100,8 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
 
         lblGenre.setText("Genero Musical");
 
-        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock" }));
+        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock", "Villancicos" }));
+
 
         lblPath.setText("Direccion Archivo");
 
@@ -288,6 +289,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         System.out.println(playlist);
         path = txtPath.getText();
         duration = BLAudioPlayer.getDuration(path);
+
         res =BLSong.insertar(name, artist, path, genre, duration, playlist);
         if (res == 0) { 
             Song temp = new Song(name, artist, path, genre, duration, playlist);
