@@ -20,11 +20,15 @@ public class ListaCircular<T> {
         L = null;
     }
 
+    public Nodo<T> getL() {
+        return L;
+    }
+    
     public boolean esVacia() {
         return L == null;
     }
 
-    public void inserta(int x) {
+    public void insertar(T x) {
         Nodo nuevo = new Nodo(x);
 
         if (L == null) {
@@ -36,7 +40,8 @@ public class ListaCircular<T> {
             L = nuevo;
         }
     }
-
+    
+    
     public Nodo<T> buscar(T x) {
         if (esVacia()) {
             return null;

@@ -18,6 +18,16 @@ public class Pila<T> {
     public Pila(){
         L=null;
     }
+
+    public Nodo<T> getL() {
+        return L;
+    }
+
+    public void setL(Nodo<T> L) {
+        this.L = L;
+    }
+    
+    
     
     public void push(T valor)
     {
@@ -44,6 +54,16 @@ public class Pila<T> {
     public void clear(){
         while(L!=null)
             L=L.getSgte();
+    }
+    
+    public int contar() {
+        int c = 0;
+        Nodo<T> p =L;
+        while (p != null) {
+            c++;
+            p = p.getSgte();
+        }
+        return c;
     }
     
     public void mostrar(DefaultListModel modelo){

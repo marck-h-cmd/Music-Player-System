@@ -19,12 +19,18 @@ public class Playlist implements Comparable<Playlist>{
     public Playlist() {
         this("NN",new ArrayList<>(),0.0,0);
     }
+    
+    public Playlist(String name) {
+        this(name, new ArrayList<>(), 0.0, 0);
+    }
 
     public Playlist(String name, double durationTotal, int numSongs) {
         this.name = name;
         this.durationTotal = durationTotal;
         this.numSongs = numSongs;
     }
+    
+    
     
     
     
@@ -66,7 +72,13 @@ public class Playlist implements Comparable<Playlist>{
     public void setNumSongs(int numSongs) {
         this.numSongs = numSongs;
     }
-
+    
+    public void addSong(Song song) {
+        this.songs.add(song);
+        this.durationTotal += song.getDuration();
+        this.numSongs = this.songs.size();
+    }
+    
     @Override
     public int compareTo(Playlist o) {
         return this.name.compareToIgnoreCase(o.getName());

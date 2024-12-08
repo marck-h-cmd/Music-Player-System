@@ -3,32 +3,52 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
+
 import gui.colorCellTable.ColorInterleavedCell;
-import javax.swing.table.DefaultTableModel; 
+import gui.internalFrames.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
+import logic.BLMusic;
+import logic.BLPlaylist;
+import logic.BLSong;
+
+import structures.node.Nodo;
+import structures.node.NodoDoble;
+import structures.object.Playlist;
+import structures.object.Song;
+
 /**
  *
  * @author marck
  */
 public class Main extends javax.swing.JFrame {
+
     DefaultTableModel modelo = new DefaultTableModel();
+      DefaultTableModel modelHistorial = new DefaultTableModel();
     ColorInterleavedCell c = new ColorInterleavedCell();
-    
-    public final void colorTable(){
+    BLMusic track = new BLMusic();
+
+    public final void colorTable() {
         c.HeaderTableColor(tblSongs);
-        for(int i=0;i<tblSongs.getColumnCount();i++){
+        for (int i = 0; i < tblSongs.getColumnCount(); i++) {
             tblSongs.getColumnModel().getColumn(i).setCellRenderer(c);
         }
     }
-    
-    
+
     /**
      * Creates new form Main
      */
-    
-    
     public Main() {
         initComponents();
         colorTable();
+        setLocationRelativeTo(null);
+        //   if(playlist!=null)
+        llenarCbx();
     }
 
     /**
@@ -41,7 +61,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jDesktopPane1 = new javax.swing.JDesktopPane();
+        dspFondo = new javax.swing.JDesktopPane();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         lblNombreReproductor = new javax.swing.JLabel();
         dspBotones = new javax.swing.JDesktopPane();
@@ -55,6 +75,17 @@ public class Main extends javax.swing.JFrame {
         lblArtistName = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSongs = new javax.swing.JTable();
+        cbxPlaylist = new javax.swing.JComboBox<>();
+        lblPlaylist = new javax.swing.JLabel();
+        btnCargar = new javax.swing.JButton();
+        lblSong = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        slVolumeSwitch = new javax.swing.JSlider();
+        pgBarSong = new javax.swing.JProgressBar();
+        lblMinStart = new javax.swing.JLabel();
+        lblTotalMins = new javax.swing.JLabel();
+        lblHistorial = new javax.swing.JLabel();
         mnbar = new javax.swing.JMenuBar();
         mniArchivo = new javax.swing.JMenu();
         mniSongs = new javax.swing.JMenuItem();
@@ -67,8 +98,8 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jDesktopPane1.setBackground(new java.awt.Color(204, 255, 204));
-        jDesktopPane1.setEnabled(false);
+        dspFondo.setBackground(new java.awt.Color(204, 255, 204));
+        dspFondo.setEnabled(false);
 
         jDesktopPane2.setBackground(new java.awt.Color(0, 204, 204));
         jDesktopPane2.setEnabled(false);
@@ -100,15 +131,35 @@ public class Main extends javax.swing.JFrame {
 
         ctrlPrevious.setBackground(new java.awt.Color(204, 255, 204));
         ctrlPrevious.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/control-previous.png"))); // NOI18N
+        ctrlPrevious.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ctrlPreviousMouseClicked(evt);
+            }
+        });
 
         ctrlPause.setBackground(new java.awt.Color(204, 255, 204));
-        ctrlPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/control-pause.png"))); // NOI18N
+        ctrlPause.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/control-play.png"))); // NOI18N
+        ctrlPause.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ctrlPauseMouseClicked(evt);
+            }
+        });
 
         ctrlNext.setBackground(new java.awt.Color(204, 255, 204));
         ctrlNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/control-next.png"))); // NOI18N
+        ctrlNext.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ctrlNextMouseClicked(evt);
+            }
+        });
 
         ctrlRandom.setBackground(new java.awt.Color(204, 255, 204));
         ctrlRandom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/aleatorio70%.png"))); // NOI18N
+        ctrlRandom.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ctrlRandomMouseClicked(evt);
+            }
+        });
 
         dspBotones.setLayer(ctrlPrevious, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspBotones.setLayer(ctrlPause, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -120,117 +171,204 @@ public class Main extends javax.swing.JFrame {
         dspBotonesLayout.setHorizontalGroup(
             dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dspBotonesLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(ctrlPrevious)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ctrlPause)
-                .addGap(12, 12, 12)
-                .addComponent(ctrlNext)
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(ctrlRandom)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(27, 27, 27)
+                .addComponent(ctrlPrevious)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addComponent(ctrlPause)
+                .addGap(28, 28, 28)
+                .addComponent(ctrlNext)
+                .addGap(28, 28, 28))
         );
         dspBotonesLayout.setVerticalGroup(
             dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dspBotonesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(ctrlPrevious)
-                    .addGroup(dspBotonesLayout.createSequentialGroup()
-                        .addGroup(dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ctrlNext)
-                            .addComponent(ctrlPause))
-                        .addGap(2, 2, 2)))
-                .addGap(26, 26, 26))
             .addGroup(dspBotonesLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(25, 25, 25)
                 .addComponent(ctrlRandom)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(dspBotonesLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ctrlPause)
+                    .addComponent(ctrlPrevious)
+                    .addComponent(ctrlNext))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         ctrlDiscPlayer.setBackground(new java.awt.Color(204, 255, 204));
-        ctrlDiscPlayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/disc60%.gif"))); // NOI18N
+        ctrlDiscPlayer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/disc.png"))); // NOI18N
 
         lblEstado.setBackground(new java.awt.Color(204, 255, 204));
         lblEstado.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
-        lblEstado.setText("No reproduciendo");
+        lblEstado.setText("Reproduciendo");
 
         lblText.setBackground(new java.awt.Color(204, 255, 204));
-        lblText.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblText.setFont(new java.awt.Font("Segoe UI", 2, 18)); // NOI18N
         lblText.setText("Nombre de artista :");
 
         lblArtistName.setBackground(new java.awt.Color(204, 255, 204));
-        lblArtistName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblArtistName.setText("desconocido");
+        lblArtistName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblArtistName.setText("Desconocido");
 
-        tblSongs.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"M"},
-                {"A"},
-                {"R"},
-                {"C"},
-                {"K"}
-            },
-            new String [] {
-                "Name Songs"
-            }
-        ));
+        tblSongs.setModel(modelo);
         tblSongs.setToolTipText("");
         jScrollPane1.setViewportView(tblSongs);
 
-        jDesktopPane1.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(dspBotones, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(ctrlDiscPlayer, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(lblEstado, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(lblText, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(lblArtistName, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        cbxPlaylist.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxPlaylist.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Playlist" }));
+        cbxPlaylist.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxPlaylistActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
-        jDesktopPane1.setLayout(jDesktopPane1Layout);
-        jDesktopPane1Layout.setHorizontalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        lblPlaylist.setBackground(new java.awt.Color(255, 255, 255));
+        lblPlaylist.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
+        lblPlaylist.setText("Playlist");
+
+        btnCargar.setBackground(new java.awt.Color(51, 255, 255));
+        btnCargar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCargar.setText("Cargar Playlist");
+        btnCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarActionPerformed(evt);
+            }
+        });
+
+        lblSong.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        lblSong.setText("Ninguna");
+
+        jTable1.setModel(modelHistorial);
+        jScrollPane2.setViewportView(jTable1);
+
+        slVolumeSwitch.setBackground(new java.awt.Color(204, 255, 204));
+
+        pgBarSong.setBackground(new java.awt.Color(102, 204, 255));
+        pgBarSong.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        pgBarSong.setForeground(new java.awt.Color(102, 255, 102));
+        pgBarSong.setBorder(null);
+
+        lblMinStart.setText("00:00");
+
+        lblTotalMins.setText("00:00");
+
+        lblHistorial.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblHistorial.setText("Historial Reproducción");
+
+        dspFondo.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(dspBotones, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(ctrlDiscPlayer, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblEstado, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblText, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblArtistName, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(cbxPlaylist, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblPlaylist, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(btnCargar, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblSong, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(slVolumeSwitch, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(pgBarSong, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblMinStart, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblTotalMins, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblHistorial, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout dspFondoLayout = new javax.swing.GroupLayout(dspFondo);
+        dspFondo.setLayout(dspFondoLayout);
+        dspFondoLayout.setHorizontalGroup(
+            dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jDesktopPane2)
-            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addGap(82, 82, 82)
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dspFondoLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblEstado)
+                        .addGap(43, 43, 43)
+                        .addComponent(lblSong))
                     .addComponent(ctrlDiscPlayer)
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDesktopPane1Layout.createSequentialGroup()
-                            .addGap(34, 34, 34)
-                            .addComponent(lblText)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblArtistName))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jDesktopPane1Layout.createSequentialGroup()
-                            .addGap(81, 81, 81)
-                            .addComponent(lblEstado))))
-                .addGap(88, 88, 88)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(264, Short.MAX_VALUE))
-        );
-        jDesktopPane1Layout.setVerticalGroup(
-            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addComponent(jDesktopPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblText)
+                        .addGap(46, 46, 46)
+                        .addComponent(lblArtistName)))
+                .addGap(136, 136, 136)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88)
+                        .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(46, Short.MAX_VALUE))
+            .addGroup(dspFondoLayout.createSequentialGroup()
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(ctrlDiscPlayer))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addGap(71, 71, 71)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblEstado)
-                .addGap(18, 18, 18)
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblText)
-                    .addComponent(lblArtistName))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addComponent(slVolumeSwitch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(lblMinStart)
+                        .addGap(33, 33, 33)
+                        .addComponent(pgBarSong, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(lblTotalMins)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(148, 148, 148))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dspFondoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblHistorial)
+                .addGap(201, 201, 201))
+        );
+        dspFondoLayout.setVerticalGroup(
+            dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dspFondoLayout.createSequentialGroup()
+                .addComponent(jDesktopPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addComponent(ctrlDiscPlayer)
+                        .addGap(18, 18, 18)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblEstado)
+                            .addComponent(lblSong, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblText)
+                            .addComponent(lblArtistName)))
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPlaylist)
+                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pgBarSong, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblMinStart)
+                                .addComponent(lblTotalMins)))
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(dspFondoLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dspBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(dspFondoLayout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(slVolumeSwitch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblHistorial)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))))
         );
 
         mnbar.setBackground(new java.awt.Color(0, 204, 204));
@@ -257,6 +395,11 @@ public class Main extends javax.swing.JFrame {
         mniPlaylists.setBackground(new java.awt.Color(153, 255, 153));
         mniPlaylists.setText("Registrar Playlist");
         mniPlaylists.setOpaque(true);
+        mniPlaylists.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniPlaylistsActionPerformed(evt);
+            }
+        });
         mniArchivo.add(mniPlaylists);
 
         mnbar.add(mniArchivo);
@@ -268,11 +411,21 @@ public class Main extends javax.swing.JFrame {
         mniAddPlaylist.setBackground(new java.awt.Color(153, 255, 153));
         mniAddPlaylist.setText("Agregar Playlist");
         mniAddPlaylist.setOpaque(true);
+        mniAddPlaylist.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAddPlaylistActionPerformed(evt);
+            }
+        });
         mniAlbum.add(mniAddPlaylist);
 
         mniDisplaySongs.setBackground(new java.awt.Color(153, 255, 153));
         mniDisplaySongs.setText("Ver Canciones");
         mniDisplaySongs.setOpaque(true);
+        mniDisplaySongs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniDisplaySongsActionPerformed(evt);
+            }
+        });
         mniAlbum.add(mniDisplaySongs);
 
         mnbar.add(mniAlbum);
@@ -293,15 +446,11 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(dspFondo)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(dspFondo)
         );
 
         pack();
@@ -309,12 +458,178 @@ public class Main extends javax.swing.JFrame {
 
     private void mniSongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSongsActionPerformed
         // TODO add your handling code here:
+        InfRegisterSong tab = new InfRegisterSong();
+        centrarInternalFrame(tab);
     }//GEN-LAST:event_mniSongsActionPerformed
+
+
+    private void mniPlaylistsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPlaylistsActionPerformed
+        InfRegisterPlaylist tab = new InfRegisterPlaylist();
+        centrarInternalFrame(tab);
+    }//GEN-LAST:event_mniPlaylistsActionPerformed
+
+    private void mniAddPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAddPlaylistActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mniAddPlaylistActionPerformed
+
+    private void mniDisplaySongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDisplaySongsActionPerformed
+        // TODO add your handling code here:
+        InfShowSongs tab = new InfShowSongs();
+        centrarInternalFrame(tab);
+    }//GEN-LAST:event_mniDisplaySongsActionPerformed
+
+    private void ctrlRandomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlRandomMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ctrlRandomMouseClicked
+
+    private void ctrlNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlNextMouseClicked
+        // TODO add your handling code here:
+
+        NodoDoble<Song> nodo = track.playNext();
+
+        setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
+        mostrar(modelo);
+        mostrarHistorial(modelHistorial);
+    }//GEN-LAST:event_ctrlNextMouseClicked
+
+    private void ctrlPauseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPauseMouseClicked
+        // TODO add your handling code here:
+        try {
+            clickCounter++;
+            if (clickCounter % 2 != 0) {
+
+                if (!track.getAudioPlayer().isPaused()) {
+                    NodoDoble<Song> nodo = track.playAudio();
+                    setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
+                } else {
+                    track.getAudioPlayer().resume();
+                }
+
+                setIcons("src/assets/img/controls/control-pause.png","src/assets/img/controls/disc60%.gif");
+                mostrar(modelo);
+                mostrarHistorial(modelHistorial);
+            } else {
+                track.pause();
+                setIcons("src/assets/img/controls/control-play.png","src/assets/img/controls/disc.png");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Playlist is empty!");
+        }
+
+
+    }//GEN-LAST:event_ctrlPauseMouseClicked
+
+    public void setIcons(String pausePath, String disc){
+        ctrlPause.setIcon(new ImageIcon(pausePath));
+        ctrlDiscPlayer.setIcon(new ImageIcon(disc));
+    }
+    private void ctrlPreviousMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPreviousMouseClicked
+        // TODO add your handling code here:
+
+        NodoDoble<Song> nodo = track.playPrevious();
+        setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
+        mostrar(modelo);
+        mostrarHistorial(modelHistorial);
+    }//GEN-LAST:event_ctrlPreviousMouseClicked
+
+    private void cbxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPlaylistActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxPlaylistActionPerformed
+
+    private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
+        // TODO add your handling code here:
+
+        String playlist = cbxPlaylist.getSelectedItem().toString();
+
+        if (!track.getQueue().isEmpty()) {
+            track.clearTrack();
+        }
+
+        songs = BLSong.listByPlaylist(playlist);
+        System.out.println(songs.toString());
+        Siterator = songs.iterator();
+        while (Siterator.hasNext()) {
+            song = Siterator.next();
+            track.addSongToPlaylist(song);
+        }
+        System.out.println(track.getQueue().contar());
+        mostrar(modelo);
+
+    }//GEN-LAST:event_btnCargarActionPerformed
+
+    public void setTextContent(String songN, String artist, double duration) {
+        lblSong.setText(songN);
+        lblArtistName.setText(artist);
+        lblTotalMins.setText(BLAudioPlayer.getMinSeg(duration));
+
+    }
+
+    private void centrarInternalFrame(JInternalFrame interna) {
+        int x = dspFondo.getWidth() / 2 - interna.getWidth() / 2;
+        int y = dspFondo.getHeight() / 2 - interna.getHeight() / 2;
+        if (interna.isShowing()) {
+            interna.setLocation(x, y);
+        } else {
+            dspFondo.add(interna);
+            interna.setLocation(x, y);
+            interna.show();
+        }
+    }
+
+    public void mostrar(DefaultTableModel modelo) {
+        Nodo<Song> p = track.getQueue().getPrimero();
+        int i = 0;
+
+        Object datos[][] = new Object[track.getQueue().contar()][4];
+        String titulos[] = {"Nombre Cancion", "Artista", "Duracion", "Genero"};
+        while (p != null) {
+
+            datos[i][0] = p.getInfo().getSongName();
+            datos[i][1] = p.getInfo().getArtistName();
+            double time = p.getInfo().getDuration();
+            datos[i][2] = BLAudioPlayer.getMinSeg(time);
+            datos[i][3] = p.getInfo().getGenre();
+            i++;
+            p = p.getSgte();
+        }
+        modelo.setDataVector(datos, titulos);
+
+    }
+    
+    
+    public void mostrarHistorial(DefaultTableModel modelo) {
+        Nodo<Song> p = track.getSongStack().getL();
+        int i = 0;
+
+        Object datos[][] = new Object[track.getSongStack().contar()][2];
+        String titulos[] = {"Nombre Cancion", "Duracion"};
+        while (p != null) {
+
+            datos[i][0] = p.getInfo().getSongName();
+          
+            double time = p.getInfo().getDuration();
+            datos[i][1] = BLAudioPlayer.getMinSeg(time);
+           
+            i++;
+            p = p.getSgte();
+        }
+        modelo.setDataVector(datos, titulos);
+
+    }
+
+    private void llenarCbx() {
+        playlists = BLPlaylist.list();
+        iterator = playlists.iterator();
+        while (iterator.hasNext()) {
+            playlist = iterator.next();
+            cbxPlaylist.addItem(playlist.getName());
+        }
+
+    }
 
     /**
      * @param args the command line arguments
      */
-    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -340,28 +655,37 @@ public class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-      java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Main().setVisible(true);
             }
         });
-    } 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCargar;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cbxPlaylist;
     private javax.swing.JLabel ctrlDiscPlayer;
     private javax.swing.JLabel ctrlNext;
     private javax.swing.JLabel ctrlPause;
     private javax.swing.JLabel ctrlPrevious;
     private javax.swing.JLabel ctrlRandom;
     private javax.swing.JDesktopPane dspBotones;
-    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JDesktopPane dspFondo;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblArtistName;
     private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblHistorial;
+    private javax.swing.JLabel lblMinStart;
     private javax.swing.JLabel lblNombreReproductor;
+    private javax.swing.JLabel lblPlaylist;
+    private javax.swing.JLabel lblSong;
     private javax.swing.JLabel lblText;
+    private javax.swing.JLabel lblTotalMins;
     private javax.swing.JMenuBar mnbar;
     private javax.swing.JMenuItem mniAddPlaylist;
     private javax.swing.JMenu mniAlbum;
@@ -371,6 +695,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenuItem mniPlaylists;
     private javax.swing.JMenu mniSalir;
     private javax.swing.JMenuItem mniSongs;
+    private javax.swing.JProgressBar pgBarSong;
+    private javax.swing.JSlider slVolumeSwitch;
     private javax.swing.JTable tblSongs;
     // End of variables declaration//GEN-END:variables
+    private int clickCounter = 0;
+    private Iterator<Playlist> iterator;
+    private Iterator<Song> Siterator;
+    private Playlist playlist;
+    private Song song;
+    private ArrayList<Playlist> playlists;
+    private ArrayList<Song> songs;
+
 }

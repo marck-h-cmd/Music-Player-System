@@ -16,6 +16,7 @@ public class BLAudioPlayer {
     private Clip clip;
     private boolean isPaused;
     private long microPos;
+    private Runnable onPlaybackEnd;
 
     public void play(String filePath) throws IOException, LineUnavailableException {
         try {
@@ -25,6 +26,14 @@ public class BLAudioPlayer {
 
             clip = AudioSystem.getClip();
             clip.open(audioStream);
+            
+             clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP && !isPaused) {
+                    if (onPlaybackEnd != null) {
+                        onPlaybackEnd.run(); 
+                    }
+                }
+            });
             clip.start();
             isPaused = false;
 
@@ -32,6 +41,10 @@ public class BLAudioPlayer {
             System.out.println(e.getMessage());
         }
 
+    }
+    
+     public void setOnPlaybackEnd(Runnable onPlaybackEnd) {
+        this.onPlaybackEnd = onPlaybackEnd;
     }
 
     public void pause() {
@@ -57,7 +70,35 @@ public class BLAudioPlayer {
         }
     }
     
-       public boolean isPlaying() {
-        return clip != null && clip.isRunning();
-       }
+   public boolean isPlaying() {
+    return clip != null && clip.isRunning();
+   }
+       
+   public boolean isPaused(){
+       return clip != null && !clip.isActive() && clip.getMicrosecondPosition() > 0;
+   }
+       
+   public static double getDuration(String filePath) {
+        try {
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            AudioFormat format = audioStream.getFormat();
+            long frameLength = audioStream.getFrameLength();
+            float frameRate = format.getFrameRate();
+
+            return (double) ((frameLength / frameRate) * 1000);
+
+        } catch (UnsupportedAudioFileException | IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return -1;
+    }
+       
+    public static String getMinSeg(double time){
+        double seg = time/1000;
+        int minutos = (int)seg/60;
+        int segRes = (int)seg%60;
+        
+        return minutos + ":" + (segRes < 10 ? "0" + segRes : segRes);
+    }
 }
