@@ -29,7 +29,7 @@ public class ListaCircular<T> {
     }
 
     public void inserta(T x) {
-        Nodo nuevo = new Nodo(x);
+        Nodo<T> nuevo = new Nodo<>(x);
 
         if (L == null) {
             L = nuevo;

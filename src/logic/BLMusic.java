@@ -7,7 +7,9 @@ package logic;
 import java.util.ArrayList;
 import structures.object.*;
 import javax.swing.JOptionPane;
+import structures.linkedlist.ListaCircular;
 import structures.linkedlist.ListaCircularDoble;
+import structures.node.Nodo;
 import structures.node.NodoArbol;
 import structures.node.NodoDoble;
 import structures.object.Song;
@@ -24,17 +26,34 @@ public class BLMusic {
     private BLAudioPlayer audioPlayer = new BLAudioPlayer();
     private Pila<Song> songStack = new Pila<>();
     private ListaCircularDoble<Song> songList = new ListaCircularDoble<>();
+    private ListaCircular<Song> AllSongs = new ListaCircular<>();
     private Colas<Song> queue = new Colas<>();
     private ArbolBB<Song> songTree = new ArbolBB<>();
     private ArbolBB<Playlist> playlistTree = new ArbolBB<>();
 
+    /*Jean Marko: Marck, yo cree ese método para que sirva para ingresar
+    todas las músicas y para que no interfiera en el metodo addSongToPlaylist, porque solo es para 
+    tocar las musicas de una playlist especifica. Ese metodo ingresa todas las musicas y no las 
+    músicas de una sola playList como hiciste en el JFrame main.*/
+    public void addSong(Song song){ 
+        try {
+            AllSongs.inserta(song);
+            songTree.inserta(song);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    public Nodo CircularListSongs(){
+        return AllSongs.getL();
+    }
+    
     // Pandaman
     public void addSongToPlaylist(Song song) {
         try {
             //        if (audioPlayer.isPlaying()){ no es necesatio ver si esta activa, eso se ve externo
             queue.encolar(song);
             songList.insertar(song);
-       
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
