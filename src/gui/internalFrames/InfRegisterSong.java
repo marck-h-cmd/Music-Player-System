@@ -8,9 +8,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import logic.BLAudioPlayer;
+import logic.BLMusic;
 import logic.BLPlaylist;
 import logic.BLSong;
+import structures.node.Nodo;
 import structures.object.Playlist;
 import structures.object.Song;
 
@@ -19,7 +23,8 @@ import structures.object.Song;
  * @author marck
  */
 public class InfRegisterSong extends javax.swing.JInternalFrame {
-
+    BLMusic b = new BLMusic();
+    DefaultTableModel modelo = new DefaultTableModel();
     /**
      * Creates new form InfRegisterSong
      */
@@ -28,6 +33,30 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         llenarCbx() ;
     }
 
+    public void mostrar(DefaultTableModel modelo) {
+        Nodo<Song> inicio = b.CircularListSongs(); 
+        Nodo<Song> actual = inicio.getSgte(); 
+        int cont = 0;
+        do {
+            cont++;
+            actual = actual.getSgte();
+        } while (actual != inicio.getSgte());
+        Object[][] datos = new Object[cont][5];
+        String[] titulos = {"Nombre", "Artista", "Género", "Duración", "Playlist"};
+        actual = inicio.getSgte();
+        int i = 0;
+        do {
+            datos[i][0] = actual.getInfo().getSongName();
+            datos[i][1] = actual.getInfo().getArtistName();
+            datos[i][2] = actual.getInfo().getGenre();
+            datos[i][3] = actual.getInfo().getDuration();
+            datos[i][4] = actual.getInfo().getNamePlaylist();
+            i++;
+            actual = actual.getSgte();
+        } while (actual != inicio.getSgte());
+        modelo.setDataVector(datos, titulos);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,7 +86,6 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         lblTitle = new javax.swing.JLabel();
 
         background.setBackground(new java.awt.Color(255, 255, 255));
-        background.setForeground(new java.awt.Color(0, 0, 0));
 
         lblCancionNom.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblCancionNom.setText("Nombre Canción");
@@ -73,6 +101,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         lblGenre.setText("Genero Musical");
 
         cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock", "Villancicos" }));
+
 
         lblPath.setText("Direccion Archivo");
 
@@ -100,22 +129,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
             }
         });
 
-        tblPlaylist.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nombre Canción", "Artista", "Genero", "Duración"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        tblPlaylist.setModel(modelo);
         jScrollPane1.setViewportView(tblPlaylist);
 
         jPanel1.setBackground(new java.awt.Color(0, 204, 204));
@@ -256,23 +270,15 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtPathActionPerformed
 
     private void btnFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFileChooserActionPerformed
-        // TODO add your handling code here:
-
         JFileChooser fileChooser = new JFileChooser();
-
         int returnValue = fileChooser.showOpenDialog(this);
-
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-        
             File selectedFile = fileChooser.getSelectedFile();
-
             txtPath.setText(selectedFile.getAbsolutePath());
         }
-
     }//GEN-LAST:event_btnFileChooserActionPerformed
 
     private void btnAddToPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToPlaylistActionPerformed
-        // TODO add your handling code here:           
         String name, genre, playlist, artist,path;
         double duration;
         int res;
@@ -282,24 +288,28 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         playlist = String.valueOf(cbxPlaylist.getSelectedItem());
         System.out.println(playlist);
         path = txtPath.getText();
-        
         duration = BLAudioPlayer.getDuration(path);
-     
+
         res =BLSong.insertar(name, artist, path, genre, duration, playlist);
-        
-        if(res==0 || res==3) {
-           
+        if (res == 0) { 
+            Song temp = new Song(name, artist, path, genre, duration, playlist);
+            b.addSong(temp); 
+            mostrar(modelo);
+            JOptionPane.showMessageDialog(null, "Canción registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            if(res==2) {
-              
-            } 
+            if(res==1 || res==3){
+                JOptionPane.showMessageDialog(null, "No se pudo registrar la canción", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        //BLSong.list();
-        
+        txtName.setText("");
+        txtArtist.setText("");
+        txtPath.setText("");
+        cbxGenre.setSelectedIndex(0);
+        cbxPlaylist.setSelectedIndex(0);
+        txtName.requestFocus();
     }//GEN-LAST:event_btnAddToPlaylistActionPerformed
 
     private void ctrlCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlCloseMouseClicked
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_ctrlCloseMouseClicked
 
@@ -308,10 +318,8 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         iterator = list.iterator();
         while(iterator.hasNext()) {
             obj = iterator.next();
-           
             cbxPlaylist.addItem(obj.getName());
-        }
-      
+        }     
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -336,5 +344,5 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
     private Iterator<Playlist> iterator;
     private Playlist obj;
-     private ArrayList<Playlist> list;
+    private ArrayList<Playlist> list;
 }

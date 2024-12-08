@@ -170,7 +170,7 @@
         <Component class="javax.swing.JComboBox" name="cbxGenre">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="5">
                 <StringItem index="0" value="Pop"/>
                 <StringItem index="1" value="Salsa"/>
                 <StringItem index="2" value="Electronica"/>
@@ -236,13 +236,8 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="tblPlaylist">
               <Properties>
-                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="4" rowCount="0">
-                    <Column editable="false" title="Nombre Canci&#xf3;n" type="java.lang.Object"/>
-                    <Column editable="true" title="Artista" type="java.lang.Object"/>
-                    <Column editable="true" title="Genero" type="java.lang.Object"/>
-                    <Column editable="true" title="Duraci&#xf3;n" type="java.lang.Object"/>
-                  </Table>
+                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="modelo" type="code"/>
                 </Property>
               </Properties>
             </Component>

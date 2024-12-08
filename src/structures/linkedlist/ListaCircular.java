@@ -28,8 +28,9 @@ public class ListaCircular<T> {
         return L == null;
     }
 
-    public void insertar(T x) {
-        Nodo nuevo = new Nodo(x);
+
+    public void inserta(T x) {
+        Nodo<T> nuevo = new Nodo<>(x);
 
         if (L == null) {
             L = nuevo;

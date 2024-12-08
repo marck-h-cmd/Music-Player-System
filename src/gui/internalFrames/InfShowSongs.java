@@ -36,7 +36,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblsongChart = new javax.swing.JTable();
         lblsearchSong = new javax.swing.JLabel();
-        song = new javax.swing.JTextField();
+        txtSearchSong = new javax.swing.JTextField();
         btnlookFor = new javax.swing.JButton();
         ctrlMusic2 = new javax.swing.JLabel();
         btnGoOut = new javax.swing.JButton();
@@ -117,7 +117,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblsearchSong)
                         .addGap(41, 41, 41)
-                        .addComponent(song, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSearchSong, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(97, 97, 97)
                         .addComponent(btnlookFor, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -130,7 +130,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblsearchSong)
-                    .addComponent(song, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearchSong, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnlookFor))
                 .addGap(50, 50, 50)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -156,7 +156,10 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnlookForActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlookForActionPerformed
-        // TODO add your handling code here:
+        String busqueda = txtSearchSong.getText();
+        
+        txtSearchSong.setText("");
+        txtSearchSong.requestFocus();
     }//GEN-LAST:event_btnlookForActionPerformed
 
     private void btnGoOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoOutActionPerformed
@@ -174,7 +177,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblsearchSong;
-    private javax.swing.JTextField song;
     private javax.swing.JTable tblsongChart;
+    private javax.swing.JTextField txtSearchSong;
     // End of variables declaration//GEN-END:variables
 }
