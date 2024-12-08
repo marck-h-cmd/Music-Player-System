@@ -86,7 +86,7 @@ public class DALPlaylist {
                 p.setName(rs.getString(1)); 
                 p.setNumSongs(rs.getInt(2)); 
                 p.setDurationTotal(rs.getDouble(3));
-                obj.insertar(p);
+                obj.inserta(p);
             }
         } catch (ClassNotFoundException | SQLException ex) {
             showMessageDialog(null, ex.getMessage(), "Error", 0);

@@ -198,7 +198,7 @@ public class InfRegisterPlaylist extends javax.swing.JInternalFrame {
             name = txtName.getText();
             if(BLPlaylist.insertar(name, 0, 0)!=3){
                 Playlist obj = new Playlist(name);
-                playlist.insertar(obj);
+                playlist.inserta(obj);
                 mostrar(model);
             }else{
                  throw new Exception("Ingrese el nombre de la playlist");       
