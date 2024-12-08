@@ -8,9 +8,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import logic.BLAudioPlayer;
 import logic.BLPlaylist;
 import logic.BLSong;
+import structures.linkedlist.ListaCircular;
+import structures.node.Nodo;
 import structures.object.Playlist;
 import structures.object.Song;
 
@@ -19,7 +23,8 @@ import structures.object.Song;
  * @author marck
  */
 public class InfRegisterSong extends javax.swing.JInternalFrame {
-
+    ListaCircular<Song> l = new ListaCircular<> ();
+    DefaultTableModel modelo = new DefaultTableModel();
     /**
      * Creates new form InfRegisterSong
      */
@@ -28,6 +33,26 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         llenarCbx() ;
     }
 
+    public void mostrar(DefaultTableModel modelo) {
+        Nodo<Song> siguiente = l.getL().getSgte();
+        int cont=0,i=0;
+        do{
+            cont++;
+            siguiente=siguiente.getSgte();
+        }while(siguiente!=l.getL().getSgte());
+        Object datos[][] = new Object[cont][5];
+        String titulos[] = {"Nombre", "Artista", "Genero", "Duración", "Playlist"};
+        do{
+            datos[i][0] = siguiente.getInfo().getSongName();
+            datos[i][1] = siguiente.getInfo().getArtistName();
+            datos[i][2] = siguiente.getInfo().getGenre();
+            datos[i][3] = siguiente.getInfo().getDuration();
+            datos[i][4] = siguiente.getInfo().getNamePlaylist();
+            i++;
+            siguiente=siguiente.getSgte();
+        }while(siguiente!=l.getL().getSgte());
+        modelo.setDataVector(datos, titulos);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -57,7 +82,6 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         lblTitle = new javax.swing.JLabel();
 
         background.setBackground(new java.awt.Color(255, 255, 255));
-        background.setForeground(new java.awt.Color(0, 0, 0));
 
         lblCancionNom.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblCancionNom.setText("Nombre Canción");
@@ -100,22 +124,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
             }
         });
 
-        tblPlaylist.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nombre Canción", "Artista", "Genero", "Duración"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        tblPlaylist.setModel(modelo);
         jScrollPane1.setViewportView(tblPlaylist);
 
         jPanel1.setBackground(new java.awt.Color(0, 204, 204));
@@ -286,16 +295,22 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         duration = BLAudioPlayer.getDuration(path);
         
         res =BLSong.insertar(name, artist, path, genre, duration, playlist);
-        
-        if(res==0 || res==3) {
-           
+        Song temp = new Song(name, artist, path, genre, duration, playlist);
+        l.inserta(temp);
+        mostrar(modelo);
+        txtName.setText("");
+        txtArtist.setText("");
+        txtPath.setText("");
+        cbxGenre.setSelectedIndex(0);
+        cbxPlaylist.setSelectedIndex(0);
+        if(res==1 || res==3) {
+           JOptionPane.showMessageDialog(null,"No se pudo registrar la canción","ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
-            if(res==2) {
-              
+            if(res==0) {
+              JOptionPane.showMessageDialog(null,"Canción Registrada exitosamente","REGISTRO CONCLUIDO", JOptionPane.INFORMATION_MESSAGE);
             } 
         }
-        //BLSong.list();
-        
+        txtName.requestFocus();
     }//GEN-LAST:event_btnAddToPlaylistActionPerformed
 
     private void ctrlCloseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlCloseMouseClicked
@@ -336,5 +351,5 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
     private Iterator<Playlist> iterator;
     private Playlist obj;
-     private ArrayList<Playlist> list;
+    private ArrayList<Playlist> list;
 }
