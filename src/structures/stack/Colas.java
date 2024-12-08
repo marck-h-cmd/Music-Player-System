@@ -38,6 +38,15 @@ public class Colas<T> {
         }
     }
 
+    public Nodo<T> getPrimero() {
+        return primero;
+    }
+
+    public Nodo<T> getUltimo() {
+        return ultimo;
+    }
+
+    
     public T frente() {
         if (!isEmpty()) {
             return primero.getInfo();
@@ -76,5 +85,15 @@ public class Colas<T> {
             modelo.addElement(p.getInfo());
             p = p.getSgte();
         }
+    }
+    
+    public int contar() {
+        int c = 0;
+        Nodo<T> p = primero;
+        while (p != null) {
+            c++;
+            p = p.getSgte();
+        }
+        return c;
     }
 }
