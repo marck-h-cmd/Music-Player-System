@@ -284,7 +284,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
         path = txtPath.getText();
         
         duration = BLAudioPlayer.getDuration(path);
-        
+     
         res =BLSong.insertar(name, artist, path, genre, duration, playlist);
         
         if(res==0 || res==3) {

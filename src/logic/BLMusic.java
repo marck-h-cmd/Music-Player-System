@@ -27,6 +27,10 @@ public class BLMusic {
     private Colas<Song> queue = new Colas<>();
     private ArbolBB<Song> songTree = new ArbolBB<>();
     private ArbolBB<Playlist> playlistTree = new ArbolBB<>();
+    
+    public BLMusic(){
+         audioPlayer.setOnPlaybackEnd(this::playNext);
+    }
 
     // Pandaman
     public void addSongToPlaylist(Song song) {
@@ -61,7 +65,7 @@ public class BLMusic {
 
         try {
             if (songList.getL() != null) {
-                NodoDoble<Song> currentSongNode = songList.getL();
+                NodoDoble<Song> currentSongNode = songList.getL().getSgte();
                 do {
                     audioPlayer.play(currentSongNode.getInfo().getFilePath());
 
@@ -69,7 +73,7 @@ public class BLMusic {
                         Thread.sleep(100);
                     
                     currentSongNode = currentSongNode.getSgte();
-                } while (currentSongNode != songList.getL());
+                } while (currentSongNode != songList.getL().getSgte());
 
             } else {
                 JOptionPane.showMessageDialog(null, "Playlist is empty!");
@@ -92,7 +96,7 @@ public class BLMusic {
 
                 NodoDoble<Song> currentSongNode = songList.getL().getSgte();
                 NodoDoble<Song> nextSongNode = currentSongNode.getSgte();
-                songStack.push(currentSongNode.getInfo());
+               songStack.push(currentSongNode.getInfo());
                 audioPlayer.play(currentSongNode.getInfo().getFilePath());
               
                songList.getL().setSgte( nextSongNode);
@@ -148,9 +152,9 @@ public class BLMusic {
                 System.out.println(song.getSongName());
                 NodoDoble<Song> nodoAnterior = new NodoDoble(song);
                 
-
+/*
                 if (!songStack.isEmpty()) 
-                    songStack.push(currentSongNode.getInfo());
+                    songStack.push(currentSongNode.getInfo());  */
                 
                 songList.getL().setSgte(nodoAnterior);
                 nodoAnterior.setSgte(currentSongNode);

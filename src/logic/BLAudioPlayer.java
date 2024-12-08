@@ -16,6 +16,7 @@ public class BLAudioPlayer {
     private Clip clip;
     private boolean isPaused;
     private long microPos;
+    private Runnable onPlaybackEnd;
 
     public void play(String filePath) throws IOException, LineUnavailableException {
         try {
@@ -25,6 +26,14 @@ public class BLAudioPlayer {
 
             clip = AudioSystem.getClip();
             clip.open(audioStream);
+            
+             clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP && !isPaused) {
+                    if (onPlaybackEnd != null) {
+                        onPlaybackEnd.run(); 
+                    }
+                }
+            });
             clip.start();
             isPaused = false;
 
@@ -32,6 +41,10 @@ public class BLAudioPlayer {
             System.out.println(e.getMessage());
         }
 
+    }
+    
+     public void setOnPlaybackEnd(Runnable onPlaybackEnd) {
+        this.onPlaybackEnd = onPlaybackEnd;
     }
 
     public void pause() {
