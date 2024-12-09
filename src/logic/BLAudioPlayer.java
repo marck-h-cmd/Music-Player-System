@@ -101,4 +101,12 @@ public class BLAudioPlayer {
         
         return minutos + ":" + (segRes < 10 ? "0" + segRes : segRes);
     }
+    
+    
+    
+    
+    
+    
+    
+    
 }
