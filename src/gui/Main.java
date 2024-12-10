@@ -499,6 +499,8 @@ public class Main extends javax.swing.JFrame {
             if (clickCounter % 2 != 0) {
 
                 if (!track.getAudioPlayer().isPaused()) {
+                     
+                      System.out.println( slVolumeSwitch.getValue());
                     NodoDoble<Song> nodo = track.playAudio();
                     setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
                 } else {
@@ -529,7 +531,7 @@ public class Main extends javax.swing.JFrame {
         NodoDoble<Song> nodo = track.playPrevious();
         setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
         mostrar(modelo);
-        mostrarHistorial(modelHistorial);
+        mostrarHistorial(modelHistorial);    
     }//GEN-LAST:event_ctrlPreviousMouseClicked
 
     private void cbxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPlaylistActionPerformed
