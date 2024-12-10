@@ -578,7 +578,9 @@ public class Main extends javax.swing.JFrame {
             interna.show();
         }
     }
-
+    
+    
+  
     public void mostrar(DefaultTableModel modelo) {
         Nodo<Song> p = track.getQueue().getPrimero();
         int i = 0;
@@ -629,7 +631,10 @@ public class Main extends javax.swing.JFrame {
         }
 
     }
-
+    
+  
+ 
+  
     /**
      * @param args the command line arguments
      */
