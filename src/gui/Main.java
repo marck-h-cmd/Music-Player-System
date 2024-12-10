@@ -300,7 +300,7 @@ public class Main extends javax.swing.JFrame {
                         .addGap(51, 51, 51)
                         .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
             .addGroup(dspFondoLayout.createSequentialGroup()
                 .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dspFondoLayout.createSequentialGroup()
@@ -446,7 +446,10 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(dspFondo)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dspFondo)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -577,7 +580,9 @@ public class Main extends javax.swing.JFrame {
             interna.show();
         }
     }
-
+    
+    
+  
     public void mostrar(DefaultTableModel modelo) {
         Nodo<Song> p = track.getQueue().getPrimero();
         int i = 0;
@@ -628,7 +633,10 @@ public class Main extends javax.swing.JFrame {
         }
 
     }
-
+    
+  
+ 
+  
     /**
      * @param args the command line arguments
      */

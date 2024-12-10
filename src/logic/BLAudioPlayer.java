@@ -17,6 +17,7 @@ public class BLAudioPlayer {
     private boolean isPaused;
     private long microPos;
     private Runnable onPlaybackEnd;
+    private FloatControl volumeControl; 
 
     public void play(String filePath) throws IOException, LineUnavailableException {
         try {
@@ -26,6 +27,8 @@ public class BLAudioPlayer {
 
             clip = AudioSystem.getClip();
             clip.open(audioStream);
+            
+            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             
              clip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP && !isPaused) {
@@ -101,4 +104,23 @@ public class BLAudioPlayer {
         
         return minutos + ":" + (segRes < 10 ? "0" + segRes : segRes);
     }
+    
+    
+       
+    public void setVolumen(int sliderValue) {
+        if (volumeControl != null) {
+            float volume = sliderValue / 100.0f;
+
+            if (volume <= 0) {
+                volumeControl.setValue(volumeControl.getMinimum());
+            } else {
+                float logVolume = 20f * (float) Math.log10(Math.max(volume, 0.0001f)); 
+
+                float clampedVolume = Math.max(volumeControl.getMinimum(), Math.min(volumeControl.getMaximum(), logVolume));
+                volumeControl.setValue(clampedVolume);
+            }
+        }
+    }
 }
+    
+
