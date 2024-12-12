@@ -218,6 +218,10 @@ public class BLMusic {
             JOptionPane.showMessageDialog(null, "Error resuming song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    public void setVolume(int volume){
+        audioPlayer.setVolumen(volume);
+    }
 
     //Jean Marko
     public Song searchSong(String nombre) {

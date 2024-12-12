@@ -243,6 +243,13 @@ public class Main extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable1);
 
         slVolumeSwitch.setBackground(new java.awt.Color(204, 255, 204));
+        slVolumeSwitch.setMaximum(150);
+        slVolumeSwitch.setValue(80);
+        slVolumeSwitch.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                slVolumeSwitchStateChanged(evt);
+            }
+        });
 
         pgBarSong.setBackground(new java.awt.Color(102, 204, 255));
         pgBarSong.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
@@ -278,29 +285,6 @@ public class Main extends javax.swing.JFrame {
         dspFondo.setLayout(dspFondoLayout);
         dspFondoLayout.setHorizontalGroup(
             dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane2)
-            .addGroup(dspFondoLayout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addComponent(lblEstado)
-                        .addGap(43, 43, 43)
-                        .addComponent(lblSong))
-                    .addComponent(ctrlDiscPlayer)
-                    .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addComponent(lblText)
-                        .addGap(46, 46, 46)
-                        .addComponent(lblArtistName)))
-                .addGap(136, 136, 136)
-                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addComponent(lblPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88)
-                        .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
             .addGroup(dspFondoLayout.createSequentialGroup()
                 .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dspFondoLayout.createSequentialGroup()
@@ -322,6 +306,29 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblHistorial)
                 .addGap(201, 201, 201))
+            .addGroup(dspFondoLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblEstado)
+                        .addGap(43, 43, 43)
+                        .addComponent(lblSong))
+                    .addComponent(ctrlDiscPlayer)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblText)
+                        .addGap(46, 46, 46)
+                        .addComponent(lblArtistName)))
+                .addGap(136, 136, 136)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addComponent(lblPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88)
+                        .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(51, 51, 51)
+                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(56, Short.MAX_VALUE))
+            .addComponent(jDesktopPane2)
         );
         dspFondoLayout.setVerticalGroup(
             dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -447,9 +454,8 @@ public class Main extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(dspFondo)
-                .addContainerGap())
+                .addComponent(dspFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -490,6 +496,7 @@ public class Main extends javax.swing.JFrame {
 
         NodoDoble<Song> nodo = track.playNext();
 
+        track.setVolume(slVolumeSwitch.getValue());
         setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
         mostrar(modelo);
         mostrarHistorial(modelHistorial);
@@ -505,10 +512,12 @@ public class Main extends javax.swing.JFrame {
                      
                       System.out.println( slVolumeSwitch.getValue());
                     NodoDoble<Song> nodo = track.playAudio();
+                 
                     setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
                 } else {
                     track.getAudioPlayer().resume();
                 }
+         //       track.setVolume(slVolumeSwitch.getValue());
 
                 setIcons("src/assets/img/controls/control-pause.png","src/assets/img/controls/disc60%.gif");
                 mostrar(modelo);
@@ -532,6 +541,7 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         NodoDoble<Song> nodo = track.playPrevious();
+       // track.setVolume(slVolumeSwitch.getValue());
         setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
         mostrar(modelo);
         mostrarHistorial(modelHistorial);    
@@ -561,6 +571,11 @@ public class Main extends javax.swing.JFrame {
         mostrar(modelo);
 
     }//GEN-LAST:event_btnCargarActionPerformed
+
+    private void slVolumeSwitchStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slVolumeSwitchStateChanged
+        // TODO add your handling code here:
+         track.setVolume(slVolumeSwitch.getValue());
+    }//GEN-LAST:event_slVolumeSwitchStateChanged
 
     public void setTextContent(String songN, String artist, double duration) {
         lblSong.setText(songN);
