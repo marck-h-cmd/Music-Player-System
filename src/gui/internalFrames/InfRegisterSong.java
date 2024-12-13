@@ -30,9 +30,16 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
      */
     public InfRegisterSong() {
         initComponents();
+        inicializarTabla();
         llenarCbx() ;
     }
-
+    
+    private void inicializarTabla() {
+        String[] titulos = {"Nombre", "Artista", "Género", "Duración", "Playlist"};
+        modelo.setColumnIdentifiers(titulos);
+        tblPlaylist.setModel(modelo);
+    }
+    
     public void mostrar(DefaultTableModel modelo) {
         Nodo<Song> inicio = b.CircularListSongs(); 
         Nodo<Song> actual = inicio.getSgte(); 

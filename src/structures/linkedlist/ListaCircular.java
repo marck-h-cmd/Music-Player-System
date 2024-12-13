@@ -42,7 +42,6 @@ public class ListaCircular<T> {
         }
     }
     
-    
     public Nodo<T> buscar(T x) {
         if (esVacia()) {
             return null;

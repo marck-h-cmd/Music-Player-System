@@ -35,10 +35,6 @@ public class BLMusic {
          audioPlayer.setOnPlaybackEnd(this::playNext);
     }
 
-    /*Jean Marko: Marck, yo cree ese método para que sirva para ingresar
-    todas las músicas y para que no interfiera en el metodo addSongToPlaylist, porque solo es para 
-    tocar las musicas de una playlist especifica. Ese metodo ingresa todas las musicas y no las 
-    músicas de una sola playList como hiciste en el JFrame main.*/
     public void addSong(Song song){ 
         try {
             AllSongs.inserta(song);
@@ -221,16 +217,16 @@ public class BLMusic {
 
     //Jean Marko
     public Song searchSong(String nombre) {
-        NodoArbol<Song> songNodo = new NodoArbol<>();
         Song temporario = new Song(nombre, null, null, null, 0, null);
-        songNodo = songTree.buscar(temporario);
+        NodoArbol<Song> songNodo = songTree.buscar(temporario);
         if (songNodo == null) {
             return null;
         } else {
-            return temporario;
+            //return temporario;
+            return songNodo.getInfo();
         }
     }
-
+    
     public Playlist searchPlaylist(String nombre) {
         NodoArbol<Playlist> playlistNodo = new NodoArbol<>();
         Playlist temp = new Playlist(nombre, new ArrayList<>(), 0.0, 0);

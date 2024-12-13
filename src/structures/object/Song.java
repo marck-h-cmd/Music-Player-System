@@ -76,6 +76,12 @@ public class Song implements Comparable<Song> {
     }
 
     @Override
+    public String toString() {
+        return "Song: " + "\nNome: " + songName + "\nNome do artista: " + artistName + "\nRuta: " + filePath +
+                "\nGénero: " + genre + "\nDuración: " + duration + "\nNome Playlist: " + namePlaylist + '}';
+    }
+
+    @Override
     public int compareTo(Song o) {
         return this.songName.compareToIgnoreCase(o.getSongName());
     }
