@@ -9,9 +9,11 @@ import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logic.BLMusic;
+import logic.BLPlaylist;
 import logic.BLSong;
 import structures.linkedlist.ListaCircular;
 import structures.node.Nodo;    
+import structures.object.Playlist;
 import structures.object.Song;  
 
 /**
@@ -22,12 +24,16 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     DefaultTableModel modelo = new DefaultTableModel();
     BLMusic b = new BLMusic();
     ListaCircular<Song> temporario = new ListaCircular<>();
+    int cont=0;
     /**
      * Creates new form InfShowSongs
      */
     public InfShowSongs() {
         initComponents();   
         inicializarModelo();
+        llenarCbx();
+        btnAddToPlaylist.setEnabled(false);
+        cbxPlaylist.setEnabled(false);
     }
     
     private void inicializarModelo() {
@@ -64,7 +70,19 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         modelo.setDataVector(datos, titulos);
     }
 
-    
+    public void insertar(){
+        int res;
+        String playlist = String.valueOf(cbxPlaylist.getSelectedItem());
+        res=BLSong.insertar(song.getSongName(), song.getArtistName(), song.getFilePath()
+                , song.getGenre(), song.getDuration(), playlist);
+        if (res == 0) { 
+            JOptionPane.showMessageDialog(null, "Canción registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            if(res==1 || res==3){
+                JOptionPane.showMessageDialog(null, "No se pudo registrar la canción", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,7 +166,8 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             }
         });
 
-        lblPlaylist.setText("Playlist :");
+        lblPlaylist.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblPlaylist.setText("Añadir a otra Playlist :");
 
         cbxPlaylist.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbxPlaylist.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Playlist" }));
@@ -158,6 +177,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             }
         });
 
+        btnAddToPlaylist.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnAddToPlaylist.setText("Agregar a playlist");
         btnAddToPlaylist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -185,13 +205,13 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                             .addComponent(lblsearchSong)
                             .addComponent(lblPlaylist))
                         .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSearchSong, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxPlaylist, 0, 165, Short.MAX_VALUE)
+                            .addComponent(txtSearchSong))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAddToPlaylist)
-                            .addComponent(btnlookFor, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnAddToPlaylist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnlookFor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(0, 61, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -230,7 +250,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 5, Short.MAX_VALUE)
+                .addGap(0, 4, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -238,22 +258,32 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnlookForActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlookForActionPerformed
-        String busqueda = txtSearchSong.getText();
-        songs = BLSong.list();
-        iterator = songs.iterator();
-        while(iterator.hasNext()){
-            song = iterator.next();
-            b.addSong(song);
+        if(cont==0){
+            String busqueda = txtSearchSong.getText();
+            songs = BLSong.list();
+            iterator = songs.iterator();
+            while(iterator.hasNext()){
+                song = iterator.next();
+                b.addSong(song);
+            }
+            Song temp = b.searchSong(busqueda);
+            if (temp != null) {
+                temporario.inserta(temp);
+                mostrar();
+                cont++;
+                txtSearchSong.setEnabled(false);
+                btnlookFor.setEnabled(false);
+                btnAddToPlaylist.setEnabled(true);
+                cbxPlaylist.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Canción no encontrada");
+                cont=0;
+                txtSearchSong.setText("");
+                txtSearchSong.requestFocus();
+                btnAddToPlaylist.setEnabled(false);
+                cbxPlaylist.setEnabled(false);
+            }      
         }
-        Song temp = b.searchSong(busqueda);
-        if (temp != null) {
-            temporario.inserta(temp);
-            mostrar();
-        } else {
-            JOptionPane.showMessageDialog(null, "Canción no encontrada");
-        }      
-        txtSearchSong.setText("");
-        txtSearchSong.requestFocus();
     }//GEN-LAST:event_btnlookForActionPerformed
 
     private void btnGoOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoOutActionPerformed
@@ -265,9 +295,45 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cbxPlaylistActionPerformed
 
     private void btnAddToPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToPlaylistActionPerformed
-
+        if(cont==1){
+            int res;
+            String nameSong = txtSearchSong.getText();
+            song = BLSong.busqueda(nameSong); 
+            String playlist = String.valueOf(cbxPlaylist.getSelectedItem());  
+            if (playlist.equals(song.getNamePlaylist())){
+                JOptionPane.showMessageDialog(null, "Esa canción ya está registrada en esa playlist");
+                
+            }else{
+                res=BLSong.insertar(song.getSongName(), song.getArtistName(), song.getFilePath()
+                    , song.getGenre(), song.getDuration(), playlist);
+                if (res == 0) { 
+                    JOptionPane.showMessageDialog(null, "Canción registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    if(res==1 || res==3){
+                        JOptionPane.showMessageDialog(null, "No se pudo registrar la canción", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+            cbxPlaylist.setSelectedIndex(0);
+            cont=0;
+            txtSearchSong.setText("");
+            txtSearchSong.requestFocus();
+            txtSearchSong.setEnabled(true);
+            btnlookFor.setEnabled(true);
+            btnAddToPlaylist.setEnabled(false);
+            cbxPlaylist.setEnabled(false);
+        }
     }//GEN-LAST:event_btnAddToPlaylistActionPerformed
-
+    
+    
+    private void llenarCbx() {
+        list = BLPlaylist.list();
+        i = list.iterator();
+        while(i.hasNext()) {
+            obj = i.next();
+            cbxPlaylist.addItem(obj.getName());
+        }     
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddToPlaylist;
@@ -288,4 +354,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private ArrayList<Song> songs;
     private Iterator<Song> iterator;
     private Song song;
+    private Iterator<Playlist> i;
+    private Playlist obj;
+    private ArrayList<Playlist> list;
 }

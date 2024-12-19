@@ -16,6 +16,10 @@ public class Song implements Comparable<Song> {
     private double duration;
     private String namePlaylist;
 
+    public Song() {
+        this("ND", "ND","ND","ND",0.0,"ND");
+    }
+    
     public Song(String songName, String artistName, String filePath, String genre, double duration, String namePlaylist) {
         this.songName = songName;
         this.artistName = artistName;

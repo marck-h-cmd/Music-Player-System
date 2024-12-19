@@ -107,8 +107,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
 
         lblGenre.setText("Genero Musical");
 
-        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock", "Villancicos" }));
-
+        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock" }));
 
         lblPath.setText("Direccion Archivo");
 
@@ -238,16 +237,12 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
                         .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblPath)
                             .addComponent(txtPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(backgroundLayout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(lblPlaylist))
-                    .addGroup(backgroundLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnAddToPlaylist))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddToPlaylist)
+                    .addComponent(lblPlaylist))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
