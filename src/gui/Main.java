@@ -29,9 +29,11 @@ import structures.object.Song;
 public class Main extends javax.swing.JFrame {
 
     DefaultTableModel modelo = new DefaultTableModel();
-      DefaultTableModel modelHistorial = new DefaultTableModel();
+    DefaultTableModel modelHistorial = new DefaultTableModel();
     ColorInterleavedCell c = new ColorInterleavedCell();
     BLMusic track = new BLMusic();
+    boolean esBucle = false;
+    
 
     public final void colorTable() {
         c.HeaderTableColor(tblSongs);
@@ -68,7 +70,7 @@ public class Main extends javax.swing.JFrame {
         ctrlPrevious = new javax.swing.JLabel();
         ctrlPause = new javax.swing.JLabel();
         ctrlNext = new javax.swing.JLabel();
-        ctrlRandom = new javax.swing.JLabel();
+        ctrlLoop = new javax.swing.JLabel();
         ctrlDiscPlayer = new javax.swing.JLabel();
         lblEstado = new javax.swing.JLabel();
         lblText = new javax.swing.JLabel();
@@ -153,26 +155,25 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        ctrlRandom.setBackground(new java.awt.Color(204, 255, 204));
-        ctrlRandom.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/controls/aleatorio70%.png"))); // NOI18N
-        ctrlRandom.addMouseListener(new java.awt.event.MouseAdapter() {
+        ctrlLoop.setBackground(new java.awt.Color(204, 255, 204));
+        ctrlLoop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/icons/loop.png"))); // NOI18N
+        ctrlLoop.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ctrlRandomMouseClicked(evt);
+                ctrlLoopMouseClicked(evt);
             }
         });
 
         dspBotones.setLayer(ctrlPrevious, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspBotones.setLayer(ctrlPause, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspBotones.setLayer(ctrlNext, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        dspBotones.setLayer(ctrlRandom, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspBotones.setLayer(ctrlLoop, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout dspBotonesLayout = new javax.swing.GroupLayout(dspBotones);
         dspBotones.setLayout(dspBotonesLayout);
         dspBotonesLayout.setHorizontalGroup(
             dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dspBotonesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(ctrlRandom)
+                .addComponent(ctrlLoop, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
                 .addComponent(ctrlPrevious)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
@@ -184,12 +185,9 @@ public class Main extends javax.swing.JFrame {
         dspBotonesLayout.setVerticalGroup(
             dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dspBotonesLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(ctrlRandom)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(dspBotonesLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(dspBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ctrlLoop, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ctrlPause)
                     .addComponent(ctrlPrevious)
                     .addComponent(ctrlNext))
@@ -478,14 +476,10 @@ public class Main extends javax.swing.JFrame {
         centrarInternalFrame(tab);
     }//GEN-LAST:event_mniDisplaySongsActionPerformed
 
-    private void ctrlRandomMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlRandomMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ctrlRandomMouseClicked
-
     private void ctrlNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlNextMouseClicked
         // TODO add your handling code here:
 
-        NodoDoble<Song> nodo = track.playNext();
+        Nodo<Song> nodo = track.playNext(esBucle);
 
         setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
         mostrar(modelo);
@@ -499,7 +493,7 @@ public class Main extends javax.swing.JFrame {
             if (clickCounter % 2 != 0) {
 
                 if (!track.getAudioPlayer().isPaused()) {
-                    NodoDoble<Song> nodo = track.playAudio();
+                    Nodo<Song> nodo = track.playAudio();
                     setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
                 } else {
                     track.getAudioPlayer().resume();
@@ -507,7 +501,8 @@ public class Main extends javax.swing.JFrame {
 
                 setIcons("src/assets/img/controls/control-pause.png","src/assets/img/controls/disc60%.gif");
                 mostrar(modelo);
-                mostrarHistorial(modelHistorial);
+                if (!track.getSongStack().isEmpty()) 
+                    mostrarHistorial(modelHistorial);
             } else {
                 track.pause();
                 setIcons("src/assets/img/controls/control-play.png","src/assets/img/controls/disc.png");
@@ -525,11 +520,19 @@ public class Main extends javax.swing.JFrame {
     }
     private void ctrlPreviousMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPreviousMouseClicked
         // TODO add your handling code here:
-
-        NodoDoble<Song> nodo = track.playPrevious();
-        setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
-        mostrar(modelo);
-        mostrarHistorial(modelHistorial);
+        ctrlPrevious.setEnabled(false);
+        try {
+            Nodo<Song> nodo = track.playPrevious();
+            if (nodo != null) {
+                setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(), nodo.getInfo().getDuration());
+                mostrar(modelo);
+                mostrarHistorial(modelHistorial);
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay canciones anteriores en el historial.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            }
+        } finally {
+            ctrlPrevious.setEnabled(true);
+        }
     }//GEN-LAST:event_ctrlPreviousMouseClicked
 
     private void cbxPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxPlaylistActionPerformed
@@ -556,6 +559,15 @@ public class Main extends javax.swing.JFrame {
         mostrar(modelo);
 
     }//GEN-LAST:event_btnCargarActionPerformed
+
+    private void ctrlLoopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlLoopMouseClicked
+        esBucle=!esBucle;
+        if(esBucle){
+            JOptionPane.showMessageDialog(null,"Bucle activado","BUCLE",JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null,"Bucle desactivado","BUCLE",JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_ctrlLoopMouseClicked
 
     public void setTextContent(String songN, String artist, double duration) {
         lblSong.setText(songN);
@@ -667,10 +679,10 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbxPlaylist;
     private javax.swing.JLabel ctrlDiscPlayer;
+    private javax.swing.JLabel ctrlLoop;
     private javax.swing.JLabel ctrlNext;
     private javax.swing.JLabel ctrlPause;
     private javax.swing.JLabel ctrlPrevious;
-    private javax.swing.JLabel ctrlRandom;
     private javax.swing.JDesktopPane dspBotones;
     private javax.swing.JDesktopPane dspFondo;
     private javax.swing.JDesktopPane jDesktopPane2;
