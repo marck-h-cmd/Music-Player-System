@@ -125,5 +125,18 @@ public class ListaCircular<T> {
             } while (p != L.getSgte());
         }
     }
+    
+    public void clear() {
+        if ( L!= null) {
+            Nodo p = L.getSgte(); 
+            while (p != L) {
+                Nodo temp = p;
+                p = p.getSgte();
+                temp.setSgte(null);
+            }
+            L.setSgte(null);
+            L = null;
+        }
+    }
 
 }
