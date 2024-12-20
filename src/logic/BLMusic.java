@@ -4,7 +4,9 @@
  */
 package logic;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.sound.sampled.LineUnavailableException;
 import structures.object.*;
 import javax.swing.JOptionPane;
 import structures.linkedlist.ListaCircular;
@@ -250,17 +252,33 @@ public class BLMusic {
 
     }
     
-    private Nodo<Song> buscarNodoPorCancion(Song song) {
+    public Nodo<Song> buscarNodoPorCancion(String songName) {
         if (songList.getL() == null) return null;
 
-        Nodo<Song> current =songList.getL();
+        Nodo<Song> current =songList.getL().getSgte();
         do {
-            if (current.getInfo().equals(song)) {
+            if (current.getInfo().getSongName().equals(songName)) {
+               
                 return current;
             }
             current = current.getSgte();
-        } while (current != songList.getL());
+        } while (current != songList.getL().getSgte());
 
         return null;
+    }
+    
+    public Nodo<Song> reproducirNodoBuscado(String name) throws IOException, LineUnavailableException{
+        
+         Nodo<Song> nodo =  buscarNodoPorCancion(name);
+         
+         if(nodo !=null){         
+            //  historial.push(nodo.getInfo());
+            //  songList.eliminar(nodo.getInfo());
+            //  queue.eliminar(nodo.getInfo());
+              audioPlayer.play( nodo.getInfo().getFilePath());
+              return nodo;
+         }
+         return null;
+                       
     }
 }

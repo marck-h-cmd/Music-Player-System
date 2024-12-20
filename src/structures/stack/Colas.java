@@ -82,6 +82,30 @@ public class Colas<T> {
         return null;
     }
 
+    public T eliminar(T valor) {
+    if (isEmpty()) 
+        return null; 
+    
+    if (primero.getInfo().equals(valor)) 
+        return desencolar(); 
+    
+    Nodo<T> actual = primero;
+    while (actual.getSgte() != null && !actual.getSgte().getInfo().equals(valor)) 
+        actual = actual.getSgte();
+    
+
+    if (actual.getSgte() == null) 
+        return null; 
+   
+    Nodo<T> nodoAEliminar = actual.getSgte();
+    actual.setSgte(nodoAEliminar.getSgte());
+
+     if (nodoAEliminar == ultimo) 
+        ultimo = actual;
+    
+    return nodoAEliminar.getInfo();
+}
+
     public void clear() {
         while (primero != null) {
             primero = primero.getSgte();
