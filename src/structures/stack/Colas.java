@@ -37,6 +37,18 @@ public class Colas<T> {
             ultimo = nuevo;
         }
     }
+    
+    public void encolarAlInicio(T valor) {
+        Nodo<T> nuevo = new Nodo(valor);
+
+        if (primero == null) {
+            primero = nuevo;
+            ultimo = nuevo;
+        } else {
+            nuevo.setSgte(primero);
+            primero = nuevo;
+        }
+    }
 
     public Nodo<T> getPrimero() {
         return primero;
