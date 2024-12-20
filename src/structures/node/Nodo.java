@@ -19,6 +19,7 @@ public class Nodo<T> {
 
     public Nodo(T info) {
         this.info = info;
+     //   this.sgte=null;
     }
 
     public Nodo(T info, Nodo<T> sgte) {

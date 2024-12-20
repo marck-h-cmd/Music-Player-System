@@ -6,6 +6,7 @@ package logic;
 
 import data.DALSong;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import structures.object.Song;
 
@@ -32,6 +33,15 @@ public class BLSong {
         } else {
             showMessageDialog(null, "Datos no validos", "Error", 0);
             return 3;
+        }
+    }
+    
+    public static Song busqueda(String songName) {
+        if (songName.trim().length() > 0) {
+            obj = DALSong.searchSong(songName);
+            return obj;
+        } else {
+            return null;
         }
     }
     

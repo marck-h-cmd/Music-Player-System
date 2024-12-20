@@ -42,7 +42,20 @@ public class ListaCircular<T> {
         }
     }
     
+
+    public void insertaInicio(T x) {
+        Nodo<T> nuevo = new Nodo<>(x);
+        if (L == null) {
+            L = nuevo;
+            nuevo.setSgte(L);
+        } else {
+            nuevo.setSgte(L.getSgte());
+            L.setSgte(nuevo);
+        }
+    }
     
+    
+
     public Nodo<T> buscar(T x) {
         if (esVacia()) {
             return null;
@@ -123,6 +136,19 @@ public class ListaCircular<T> {
                 modelo.addElement(p.getInfo());
                 p = p.getSgte();
             } while (p != L.getSgte());
+        }
+    }
+    
+    public void clear() {
+        if ( L!= null) {
+            Nodo p = L.getSgte(); 
+            while (p != L) {
+                Nodo temp = p;
+                p = p.getSgte();
+                temp.setSgte(null);
+            }
+            L.setSgte(null);
+            L = null;
         }
     }
 
