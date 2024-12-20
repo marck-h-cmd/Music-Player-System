@@ -6,8 +6,12 @@ package gui;
 
 import gui.colorCellTable.ColorInterleavedCell;
 import gui.internalFrames.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
@@ -89,12 +93,15 @@ public class Main extends javax.swing.JFrame {
         lblMinStart = new javax.swing.JLabel();
         lblTotalMins = new javax.swing.JLabel();
         lblHistorial = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        lblPlaylist1 = new javax.swing.JLabel();
+        cbxCanciones = new javax.swing.JComboBox<>();
+        ctrlSong = new javax.swing.JLabel();
         mnbar = new javax.swing.JMenuBar();
         mniArchivo = new javax.swing.JMenu();
         mniSongs = new javax.swing.JMenuItem();
         mniPlaylists = new javax.swing.JMenuItem();
         mniAlbum = new javax.swing.JMenu();
-        mniAddPlaylist = new javax.swing.JMenuItem();
         mniDisplaySongs = new javax.swing.JMenuItem();
         mniHelp = new javax.swing.JMenu();
         mniSalir = new javax.swing.JMenu();
@@ -126,7 +133,7 @@ public class Main extends javax.swing.JFrame {
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane2Layout.createSequentialGroup()
                 .addComponent(lblNombreReproductor)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         dspBotones.setBackground(new java.awt.Color(204, 255, 204));
@@ -223,10 +230,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         lblPlaylist.setBackground(new java.awt.Color(255, 255, 255));
-        lblPlaylist.setFont(new java.awt.Font("Segoe UI", 2, 24)); // NOI18N
+        lblPlaylist.setFont(new java.awt.Font("Vensim Sans ExtraBold", 1, 18)); // NOI18N
         lblPlaylist.setText("Playlist");
 
         btnCargar.setBackground(new java.awt.Color(51, 255, 255));
+        btnCargar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         btnCargar.setForeground(new java.awt.Color(255, 255, 255));
         btnCargar.setText("Cargar Playlist");
         btnCargar.addActionListener(new java.awt.event.ActionListener() {
@@ -262,6 +270,23 @@ public class Main extends javax.swing.JFrame {
         lblHistorial.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblHistorial.setText("Historial Reproducción");
 
+        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setToolTipText("");
+
+        lblPlaylist1.setBackground(new java.awt.Color(255, 255, 255));
+        lblPlaylist1.setFont(new java.awt.Font("Vensim Sans ExtraBold", 1, 14)); // NOI18N
+        lblPlaylist1.setText("Reproducir una canción");
+
+        cbxCanciones.setEnabled(false);
+
+        ctrlSong.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/icons/musicizi.png"))); // NOI18N
+        ctrlSong.setEnabled(false);
+        ctrlSong.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ctrlSongMouseClicked(evt);
+            }
+        });
+
         dspFondo.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspFondo.setLayer(dspBotones, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspFondo.setLayer(ctrlDiscPlayer, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -279,6 +304,10 @@ public class Main extends javax.swing.JFrame {
         dspFondo.setLayer(lblMinStart, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspFondo.setLayer(lblTotalMins, javax.swing.JLayeredPane.DEFAULT_LAYER);
         dspFondo.setLayer(lblHistorial, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(jSeparator1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(lblPlaylist1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(cbxCanciones, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        dspFondo.setLayer(ctrlSong, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout dspFondoLayout = new javax.swing.GroupLayout(dspFondo);
         dspFondo.setLayout(dspFondoLayout);
@@ -317,41 +346,67 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(lblText)
                         .addGap(46, 46, 46)
                         .addComponent(lblArtistName)))
-                .addGap(136, 136, 136)
-                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addComponent(lblPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88)
-                        .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(51, 51, 51)
-                        .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35))
+                    .addGroup(dspFondoLayout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPlaylist)
+                            .addGroup(dspFondoLayout.createSequentialGroup()
+                                .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPlaylist1)
+                            .addGroup(dspFondoLayout.createSequentialGroup()
+                                .addComponent(cbxCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ctrlSong)))
+                        .addContainerGap(45, Short.MAX_VALUE))))
             .addComponent(jDesktopPane2)
         );
         dspFondoLayout.setVerticalGroup(
             dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dspFondoLayout.createSequentialGroup()
-                .addComponent(jDesktopPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jDesktopPane2)
                 .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                         .addComponent(ctrlDiscPlayer)
                         .addGap(18, 18, 18)
                         .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblEstado)
                             .addComponent(lblSong, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                         .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblText)
                             .addComponent(lblArtistName)))
                     .addGroup(dspFondoLayout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblPlaylist)
-                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(22, 22, 22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(dspFondoLayout.createSequentialGroup()
+                                .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(dspFondoLayout.createSequentialGroup()
+                                        .addComponent(lblPlaylist)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnCargar, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(dspFondoLayout.createSequentialGroup()
+                                        .addComponent(lblPlaylist1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(ctrlSong)
+                                            .addComponent(cbxCanciones, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(dspFondoLayout.createSequentialGroup()
@@ -414,16 +469,6 @@ public class Main extends javax.swing.JFrame {
         mniAlbum.setForeground(new java.awt.Color(255, 255, 255));
         mniAlbum.setText("Album");
 
-        mniAddPlaylist.setBackground(new java.awt.Color(153, 255, 153));
-        mniAddPlaylist.setText("Agregar Playlist");
-        mniAddPlaylist.setOpaque(true);
-        mniAddPlaylist.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniAddPlaylistActionPerformed(evt);
-            }
-        });
-        mniAlbum.add(mniAddPlaylist);
-
         mniDisplaySongs.setBackground(new java.awt.Color(153, 255, 153));
         mniDisplaySongs.setText("Ver Canciones");
         mniDisplaySongs.setOpaque(true);
@@ -452,9 +497,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(dspFondo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(dspFondo)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -476,10 +519,6 @@ public class Main extends javax.swing.JFrame {
         centrarInternalFrame(tab);
     }//GEN-LAST:event_mniPlaylistsActionPerformed
 
-    private void mniAddPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAddPlaylistActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mniAddPlaylistActionPerformed
-
     private void mniDisplaySongsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniDisplaySongsActionPerformed
         // TODO add your handling code here:
         InfShowSongs tab = new InfShowSongs();
@@ -489,12 +528,13 @@ public class Main extends javax.swing.JFrame {
     private void ctrlNextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlNextMouseClicked
         // TODO add your handling code here:
 
-        Nodo<Song> nodo = track.playNext(esBucle);
+        Nodo<Song> nodo = track.playSiguiente(esBucle);
 
-        track.setVolume(slVolumeSwitch.getValue());
+        //track.setVolume(slVolumeSwitch.getValue());
         setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
         mostrar(modelo);
         mostrarHistorial(modelHistorial);
+        mostrarCbx();
     }//GEN-LAST:event_ctrlNextMouseClicked
 
     private void ctrlPauseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlPauseMouseClicked
@@ -514,7 +554,7 @@ public class Main extends javax.swing.JFrame {
 
                 setIcons("src/assets/img/controls/control-pause.png","src/assets/img/controls/disc60%.gif");
                 mostrar(modelo);
-                if (!track.getSongStack().isEmpty()) 
+                if (!track.getHistorialReproduccion().isEmpty()) 
                     mostrarHistorial(modelHistorial);
             } else {
                 track.pause();
@@ -536,11 +576,12 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
         ctrlPrevious.setEnabled(false);
         try {
-            Nodo<Song> nodo = track.playPrevious();
+            Nodo<Song> nodo = track.playAnterior();
             if (nodo != null) {
                 setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(), nodo.getInfo().getDuration());
                 mostrar(modelo);
                 mostrarHistorial(modelHistorial);
+                mostrarCbx();
             } else {
                 JOptionPane.showMessageDialog(this, "No hay canciones anteriores en el historial.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
@@ -556,13 +597,19 @@ public class Main extends javax.swing.JFrame {
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
         // TODO add your handling code here:
 
+       
         String playlist = cbxPlaylist.getSelectedItem().toString();
 
         if (!track.getQueue().isEmpty()) 
             track.clearTrack();
-        if(track.getAudioPlayer().isPlaying())
+        if(track.getAudioPlayer().isPlaying()){
+            setIcons("src/assets/img/controls/control-play.png","src/assets/img/controls/disc.png");
             track.getAudioPlayer().stop();
-
+            setTextContent("Ninguno", "No conocido", 1);
+            timerCounter.stopCounter();
+          
+        }
+          
         songs = BLSong.listByPlaylist(playlist);
         System.out.println(songs.toString());
         Siterator = songs.iterator();
@@ -570,8 +617,9 @@ public class Main extends javax.swing.JFrame {
             song = Siterator.next();
             track.addSongToPlaylist(song);
         }
-        System.out.println(track.getQueue().contar());
         mostrar(modelo);
+        activateButtons(true);
+        mostrarCbx();
 
     }//GEN-LAST:event_btnCargarActionPerformed
 
@@ -590,6 +638,33 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ctrlLoopMouseClicked
 
+    private void ctrlSongMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlSongMouseClicked
+        // TODO add your handling code here:
+         if(track.getAudioPlayer().isPlaying()){     
+            track.getAudioPlayer().stop();
+            timerCounter.stopCounter();        
+        }
+        Nodo<Song> nodo;
+        try {
+            nodo = track.reproducirNodoBuscado(cbxCanciones.getSelectedItem().toString());
+            
+          setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
+          mostrar(modelo);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+ 
+    }//GEN-LAST:event_ctrlSongMouseClicked
+
+    
+    public void activateButtons(boolean state){
+        cbxCanciones.setEnabled(state);
+        ctrlSong.setEnabled(state);
+    }
     public void setTextContent(String songN, String artist, double duration) {
         lblSong.setText(songN);
         lblArtistName.setText(artist);
@@ -634,10 +709,10 @@ public class Main extends javax.swing.JFrame {
     
     
     public void mostrarHistorial(DefaultTableModel modelo) {
-        Nodo<Song> p = track.getSongStack().getL();
+        Nodo<Song> p = track.getHistorialReproduccion().getL();
         int i = 0;
 
-        Object datos[][] = new Object[track.getSongStack().contar()][2];
+        Object datos[][] = new Object[track.getHistorialReproduccion().contar()][2];
         String titulos[] = {"Nombre Cancion", "Duracion"};
         while (p != null) {
 
@@ -663,6 +738,23 @@ public class Main extends javax.swing.JFrame {
 
     }
     
+     public void mostrarCbx() {
+        cbxCanciones.removeAllItems();
+        if (!track.getSongList().esVacia()) {
+            Nodo<Song> p = track.getSongList().getL().getSgte();
+            do {
+                 cbxCanciones.addItem(p.getInfo().getSongName());
+                p = p.getSgte();
+            } while (p != track.getSongList().getL().getSgte());
+        }
+    }
+    
+    
+    private void llenarCbxSong(String name) {
+        
+            cbxCanciones.addItem(name);
+       
+    }
   
  
   
@@ -704,17 +796,20 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCargar;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cbxCanciones;
     private javax.swing.JComboBox<String> cbxPlaylist;
     private javax.swing.JLabel ctrlDiscPlayer;
     private javax.swing.JLabel ctrlLoop;
     private javax.swing.JLabel ctrlNext;
     private javax.swing.JLabel ctrlPause;
     private javax.swing.JLabel ctrlPrevious;
+    private javax.swing.JLabel ctrlSong;
     private javax.swing.JDesktopPane dspBotones;
     private javax.swing.JDesktopPane dspFondo;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblArtistName;
     private javax.swing.JLabel lblEstado;
@@ -722,11 +817,11 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel lblMinStart;
     private javax.swing.JLabel lblNombreReproductor;
     private javax.swing.JLabel lblPlaylist;
+    private javax.swing.JLabel lblPlaylist1;
     private javax.swing.JLabel lblSong;
     private javax.swing.JLabel lblText;
     private javax.swing.JLabel lblTotalMins;
     private javax.swing.JMenuBar mnbar;
-    private javax.swing.JMenuItem mniAddPlaylist;
     private javax.swing.JMenu mniAlbum;
     private javax.swing.JMenu mniArchivo;
     private javax.swing.JMenuItem mniDisplaySongs;

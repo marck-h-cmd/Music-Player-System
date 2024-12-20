@@ -4,10 +4,15 @@
  */
 package gui.internalFrames;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
 import logic.BLMusic;
 import logic.BLPlaylist;
 import logic.BLSong;
@@ -25,6 +30,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     BLMusic b = new BLMusic();
     ListaCircular<Song> temporario = new ListaCircular<>();
     int cont=0;
+    private int highlightedRow = -1;
     /**
      * Creates new form InfShowSongs
      */
@@ -32,8 +38,22 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         initComponents();   
         inicializarModelo();
         llenarCbx();
+        llenarTabla();
         btnAddToPlaylist.setEnabled(false);
         cbxPlaylist.setEnabled(false);
+        
+        tblSongChart.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (row == highlightedRow) {
+                    cell.setBackground(Color.YELLOW); // Resaltar fila en amarillo
+                } else {
+                    cell.setBackground(Color.WHITE); // Color original
+                }
+                return cell;
+            }
+        });
     }
     
     private void inicializarModelo() {
@@ -62,26 +82,12 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             datos[i][0] = actual.getInfo().getSongName();
             datos[i][1] = actual.getInfo().getArtistName();
             datos[i][2] = actual.getInfo().getGenre();
-            datos[i][3] = actual.getInfo().getDuration();
+            datos[i][3] = BLAudioPlayer.getMinSeg(actual.getInfo().getDuration());
             datos[i][4] = actual.getInfo().getNamePlaylist();
             i++;
             actual = actual.getSgte();
         } while (actual != inicio.getSgte());
         modelo.setDataVector(datos, titulos);
-    }
-
-    public void insertar(){
-        int res;
-        String playlist = String.valueOf(cbxPlaylist.getSelectedItem());
-        res=BLSong.insertar(song.getSongName(), song.getArtistName(), song.getFilePath()
-                , song.getGenre(), song.getDuration(), playlist);
-        if (res == 0) { 
-            JOptionPane.showMessageDialog(null, "Canción registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            if(res==1 || res==3){
-                JOptionPane.showMessageDialog(null, "No se pudo registrar la canción", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -264,15 +270,22 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         if(cont==0){
             String busqueda = txtSearchSong.getText();
             songs = BLSong.list();
-            iterator = songs.iterator();
-            while(iterator.hasNext()){
-                song = iterator.next();
+            s = songs.iterator();
+            while(s.hasNext()){
+                song = s.next();
                 b.addSong(song);
             }
             Song temp = b.searchSong(busqueda);
             if (temp != null) {
-                temporario.inserta(temp);
-                mostrar();
+                
+                for (int i = 0; i < tblSongChart.getRowCount(); i++) {
+                    if (tblSongChart.getValueAt(i, 0).equals(temp.getSongName())) {
+                        highlightedRow = i; // Guardar el índice de la fila.
+                        break;
+                    }
+                }
+                tblSongChart.repaint();
+                
                 cont++;
                 txtSearchSong.setEnabled(false);
                 btnlookFor.setEnabled(false);
@@ -325,19 +338,32 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             btnlookFor.setEnabled(true);
             btnAddToPlaylist.setEnabled(false);
             cbxPlaylist.setEnabled(false);
+            
+            highlightedRow = -1; // Restablecer el índice de la fila resaltada.
+            tblSongChart.repaint();
         }
     }//GEN-LAST:event_btnAddToPlaylistActionPerformed
     
     
     private void llenarCbx() {
         list = BLPlaylist.list();
-        i = list.iterator();
-        while(i.hasNext()) {
-            obj = i.next();
+        p = list.iterator();
+        while(p.hasNext()) {
+            obj = p.next();
             cbxPlaylist.addItem(obj.getName());
         }     
     }
 
+    private void llenarTabla(){
+        songs = BLSong.list();
+        s = songs.iterator();
+        while(s.hasNext()) {
+            song = s.next();
+            temporario.inserta(song);
+        }
+        mostrar();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddToPlaylist;
     private javax.swing.JButton btnGoOut;
@@ -354,10 +380,10 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblSongChart;
     private javax.swing.JTextField txtSearchSong;
     // End of variables declaration//GEN-END:variables
-    private ArrayList<Song> songs;
-    private Iterator<Song> iterator;
     private Song song;
-    private Iterator<Playlist> i;
     private Playlist obj;
+    private Iterator<Playlist> p;
+    private Iterator<Song> s;
     private ArrayList<Playlist> list;
+    private ArrayList<Song> songs;
 }
