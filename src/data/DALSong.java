@@ -46,8 +46,7 @@ public class DALSong {
         return mensaje;
     }
 
-    
-     public static ArrayList<Song> list() {
+    public static ArrayList<Song> list() {
         String sql;
         ArrayList<Song> obj = new ArrayList<>();
         try {
@@ -73,7 +72,7 @@ public class DALSong {
         return obj;
     }
      
-     public static ArrayList<Song> listByPlaylist(String playlist) {
+    public static ArrayList<Song> listByPlaylist(String playlist) {
         String sql;
         ArrayList<Song> obj = new ArrayList<>();
         try {
@@ -99,4 +98,35 @@ public class DALSong {
         }
         return obj;
     }
+    
+    public static Song searchSong(String name) {
+        Song s = new Song();
+        try {
+            cn = Conexion.realizarConexion();
+            String sql = "{call sp_buscar_musica(?)}";
+            cs = cn.prepareCall(sql);
+            cs.setString(1, name);
+            rs = cs.executeQuery();
+            while(rs.next()) {
+                s.setSongName(rs.getString(2));
+                s.setArtistName(rs.getString(3));
+                s.setFilePath(rs.getString(4));
+                s.setGenre(rs.getString(5));
+                s.setDuration(rs.getDouble(6));
+                s.setNamePlaylist(rs.getString(7));            
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            showMessageDialog(null, ex.getMessage(), "Error", 0);
+        } finally {
+            try {
+                rs.close();
+                cs.close();
+                cn.close();
+            } catch (SQLException ex) {
+                showMessageDialog(null, ex.getMessage(), "Error", 0);
+            }
+        }
+        return s;
+    }
+    
 }
