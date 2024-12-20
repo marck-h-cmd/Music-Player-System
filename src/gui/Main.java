@@ -575,10 +575,12 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnCargarActionPerformed
 
+
     private void slVolumeSwitchStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_slVolumeSwitchStateChanged
         // TODO add your handling code here:
          track.setVolume(slVolumeSwitch.getValue());
     }//GEN-LAST:event_slVolumeSwitchStateChanged
+
     private void ctrlLoopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctrlLoopMouseClicked
         esBucle=!esBucle;
         if(esBucle){
