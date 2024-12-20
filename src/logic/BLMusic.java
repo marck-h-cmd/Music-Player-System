@@ -114,17 +114,10 @@ public class BLMusic {
             if (songList.getL() != null) {
 
                 Nodo<Song> currentSongNode = songList.getL().getSgte();
-                Nodo<Song> nextSongNode = currentSongNode.getSgte();
-                //Añade la cancion reproducida a la pila
-                songStack.push(currentSongNode.getInfo());
-                //Reproduce la cancion
+              
                 audioPlayer.play(currentSongNode.getInfo().getFilePath());
-                //Se pierde el anterior
-                songList.getL().setSgte( nextSongNode);
-                
-                //Descola la cancion de la playlis
                 queue.desencolar();
-                //Retorna la primera cancion de la lista
+                
                 return currentSongNode;
             } else {
                 JOptionPane.showMessageDialog(null, "Playlist is empty!");
@@ -137,20 +130,35 @@ public class BLMusic {
     }
 
     // Marck
-    public Nodo<Song> playNext() {
+    public Nodo<Song> playNext(boolean esBucle) {
 
         try {
             if (songList.getL() != null) {
+                
                 Nodo<Song> currentSongNode = songList.getL().getSgte();
+                
                 Nodo<Song> nextSongNode = currentSongNode.getSgte();
-                if (!songStack.isEmpty()) 
+                
+                if(currentSongNode!=nextSongNode)
                     songStack.push(currentSongNode.getInfo());
-  
-                audioPlayer.play(currentSongNode.getInfo().getFilePath());
+                
+                audioPlayer.play(nextSongNode.getInfo().getFilePath());
                 
                 songList.getL().setSgte( nextSongNode);
                 queue.desencolar();
-                return currentSongNode;
+                //Que cuando esta en el ultimo que se reprodusca el primero
+                if(songList.getL().getSgte()==currentSongNode && esBucle){
+                    Song song = null;
+                    queue.encolarAlInicio(currentSongNode.getInfo());
+                    while(!songStack.isEmpty()){
+                        song = songStack.pop();
+                        songList.insertaInicio(song);
+                        queue.encolarAlInicio(song);
+                    }
+                        audioPlayer.play(songList.getL().getSgte().getInfo().getFilePath());
+                    return songList.getL().getSgte();
+                }
+                return nextSongNode;
                 
             } else {
                 JOptionPane.showMessageDialog(null, "Playlist is empty!");
@@ -165,41 +173,33 @@ public class BLMusic {
     public Nodo<Song>  playPrevious() {
 
         try {
-            if (songList.getL() != null) {
+            
+            if (songList.getL() != null &&!songStack.isEmpty()) {
                 Nodo<Song> currentSongNode = songList.getL().getSgte();
-                Song song=null;
+                if(!songStack.isEmpty()){    
+                    Song song = songStack.pop();
 
-               // NodoDoble<Song> previousSongNode = currentSongNode.getAnt();
-               if(songStack.getL().getSgte()!=songStack.getL()){
-                    songStack.pop();
-                    song = songStack.pop();
+                    Nodo<Song> nodoAnterior = new Nodo(song);
+
+                    songList.getL().setSgte(nodoAnterior);
+                    nodoAnterior.setSgte(currentSongNode);
+                    //Si esta en el primero que se repita la cancion
+
+                    queue.encolarAlInicio(song);
+
+                    audioPlayer.play(nodoAnterior.getInfo().getFilePath());
+
+                     return nodoAnterior;
+                }else{
+                   audioPlayer.play(currentSongNode.getInfo().getFilePath()); 
+                   return currentSongNode;
                 }
-                //System.out.println(song.getSongName());
-                //System.out.println(song1.getSongName());
-                
-                //System.out.println(currentSongNode.getInfo().getArtistName());
-                
-                Nodo<Song> nodoAnterior = new Nodo(song);
-                
-
-//                if (!songStack.isEmpty()) 
-//                    songStack.push(currentSongNode.getInfo());
-                
-                songList.getL().setSgte(nodoAnterior);
-                nodoAnterior.setSgte(currentSongNode);
-                System.out.println(nodoAnterior.getSgte().getInfo().getSongName());
-                queue.encolar(song);
-             
-
-                audioPlayer.play(nodoAnterior.getInfo().getFilePath());
-                
-                 return nodoAnterior;
             } else {
                 System.out.println("Playlist is empty!");
             }
-
+            
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error playing song: aña " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         return null;
     }
