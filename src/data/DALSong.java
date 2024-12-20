@@ -13,7 +13,9 @@ import structures.object.Song;
  * @author marck
  */
 public class DALSong {
-      private static Connection cn = null;
+    private static Connection cn = null;
+    private static Statement st = null;
+    private static PreparedStatement ps = null;
     private static ResultSet rs = null;
     private static CallableStatement cs = null;
     
@@ -51,11 +53,11 @@ public class DALSong {
         ArrayList<Song> obj = new ArrayList<>();
         try {
             cn = Conexion.realizarConexion();
-            sql = "{call sp_list_song()}";
+            sql = "{call sp_list_songs()}";
             cs = cn.prepareCall(sql);
-            rs = cs.executeQuery();
+            rs = cs.executeQuery(sql);
             while (rs.next()) {
-                obj.add(new Song(rs.getString(2), rs.getString(3) , rs.getString(4), rs.getString(5), Integer.parseInt(rs.getString(6)), rs.getString(7)));
+                obj.add(new Song(rs.getString(2), rs.getString(3) , rs.getString(4), rs.getString(5), Double.parseDouble(rs.getString(6)), rs.getString(7)));
             }
             
         } catch (ClassNotFoundException | SQLException ex) {
@@ -128,5 +130,5 @@ public class DALSong {
         }
         return s;
     }
-    
+      
 }
