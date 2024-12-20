@@ -35,10 +35,6 @@ public class BLMusic {
          //audioPlayer.setOnPlaybackEnd(this::playNext);
     }
 
-    /*Jean Marko: Marck, yo cree ese método para que sirva para ingresar
-    todas las músicas y para que no interfiera en el metodo addSongToPlaylist, porque solo es para 
-    tocar las musicas de una playlist especifica. Ese metodo ingresa todas las musicas y no las 
-    músicas de una sola playList como hiciste en el JFrame main.*/
     public void addSong(Song song){ 
         try {
             AllSongs.inserta(song);
@@ -55,7 +51,7 @@ public class BLMusic {
     // Pandaman
     public void addSongToPlaylist(Song song) {
         try {
-            //        if (audioPlayer.isPlaying()){ no es necesatio ver si esta activa, eso se ve externo
+           
             queue.encolar(song);
             songList.inserta(song);
         } catch (Exception e) {
@@ -208,13 +204,10 @@ public class BLMusic {
     // Pandaman
     public void pause() {
         try {
-            if (!audioPlayer.isPaused()) {// si  clip !=null && clip.isRunning
+            if (!audioPlayer.isPaused()) {
                 audioPlayer.pause();
-            } else {
-                // si clip!= null && audioPlayer.getIsPaused==true 
-                audioPlayer.resume();
-                //Si clip es null
-                //pause no hace nada 
+            } else {       
+                audioPlayer.resume();            
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error  playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -229,19 +222,23 @@ public class BLMusic {
             JOptionPane.showMessageDialog(null, "Error resuming song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    public void setVolume(int volume){
+        audioPlayer.setVolumen(volume);
+    }
 
     //Jean Marko
     public Song searchSong(String nombre) {
-        NodoArbol<Song> songNodo = new NodoArbol<>();
         Song temporario = new Song(nombre, null, null, null, 0, null);
-        songNodo = songTree.buscar(temporario);
+        NodoArbol<Song> songNodo = songTree.buscar(temporario);
         if (songNodo == null) {
             return null;
         } else {
-            return temporario;
+          
+            return songNodo.getInfo();
         }
     }
-
+    
     public Playlist searchPlaylist(String nombre) {
         NodoArbol<Playlist> playlistNodo = new NodoArbol<>();
         Playlist temp = new Playlist(nombre, new ArrayList<>(), 0.0, 0);

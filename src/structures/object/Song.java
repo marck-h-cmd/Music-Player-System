@@ -16,6 +16,10 @@ public class Song implements Comparable<Song> {
     private double duration;
     private String namePlaylist;
 
+    public Song() {
+        this("ND", "ND","ND","ND",0.0,"ND");
+    }
+    
     public Song(String songName, String artistName, String filePath, String genre, double duration, String namePlaylist) {
         this.songName = songName;
         this.artistName = artistName;
@@ -73,6 +77,12 @@ public class Song implements Comparable<Song> {
 
     public void setDuration(double duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString() {
+        return "Song: " + "\nNome: " + songName + "\nNome do artista: " + artistName + "\nRuta: " + filePath +
+                "\nGénero: " + genre + "\nDuración: " + duration + "\nNome Playlist: " + namePlaylist + '}';
     }
 
     @Override

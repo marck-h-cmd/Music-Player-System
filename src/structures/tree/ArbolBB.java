@@ -18,7 +18,7 @@ public class ArbolBB<T extends Comparable<T>> {
     public ArbolBB() {
         raiz = null;
     }
-
+    
     public boolean esVacio() {
         return raiz == null;
     }
@@ -35,7 +35,6 @@ public class ArbolBB<T extends Comparable<T>> {
         } else if (x.compareTo(r.getInfo()) > 0) {
             r.setDerecho(inserta(x,r.getDerecho()));
         }
-
         return r;
     }
 
@@ -44,17 +43,10 @@ public class ArbolBB<T extends Comparable<T>> {
     }
 
     private NodoArbol buscar(T x, NodoArbol<T> r) {
-        if (r != null) {
-            if (x == r.getInfo()) {
-                return r;
-            } else if (x.compareTo(r.getInfo()) < 0) {
-                return buscar(x,r.getIzquierdo());
-            } else {
-                return buscar(x,r.getDerecho());
-            }
-        } else {
-            return null;
-        }
+        if(r==null) return null;
+        else if (x.compareTo(r.getInfo()) < 0) return buscar(x,r.getIzquierdo());
+        else if (x.compareTo(r.getInfo()) > 0) return buscar(x,r.getDerecho());
+        else return r;
     }
 
     public void preOrden(DefaultListModel modelo) {
