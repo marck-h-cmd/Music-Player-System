@@ -53,7 +53,7 @@ public class DALSong {
         ArrayList<Song> obj = new ArrayList<>();
         try {
             cn = Conexion.realizarConexion();
-            sql = "{call sp_list_songs()}";
+            sql = "{call sp_list_song()}";
             cs = cn.prepareCall(sql);
             rs = cs.executeQuery(sql);
             while (rs.next()) {
