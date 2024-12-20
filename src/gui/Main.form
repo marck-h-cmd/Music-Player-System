@@ -574,6 +574,9 @@
               <Border info="null"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="pgBarSongStateChanged"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblMinStart">
           <Properties>

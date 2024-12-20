@@ -53,7 +53,7 @@ public class Main extends javax.swing.JFrame {
         //   if(playlist!=null)
         llenarCbx();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -254,6 +254,11 @@ public class Main extends javax.swing.JFrame {
         pgBarSong.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
         pgBarSong.setForeground(new java.awt.Color(102, 255, 102));
         pgBarSong.setBorder(null);
+        pgBarSong.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                pgBarSongStateChanged(evt);
+            }
+        });
 
         lblMinStart.setText("00:00");
 
@@ -524,8 +529,6 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Playlist is empty!");
         }
-
-
     }//GEN-LAST:event_ctrlPauseMouseClicked
 
     public void setIcons(String pausePath, String disc){
@@ -541,6 +544,7 @@ public class Main extends javax.swing.JFrame {
                 setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(), nodo.getInfo().getDuration());
                 mostrar(modelo);
                 mostrarHistorial(modelHistorial);
+                track.setVolume(slVolumeSwitch.getValue());
             } else {
                 JOptionPane.showMessageDialog(this, "No hay canciones anteriores en el historial.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             }
@@ -590,12 +594,19 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ctrlLoopMouseClicked
 
+    private void pgBarSongStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_pgBarSongStateChanged
+        if(pgBarSong.getPercentComplete() == 1.0){
+            Nodo<Song> nodo = track.playNext(esBucle);
+            setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
+        }
+    }//GEN-LAST:event_pgBarSongStateChanged
+
     public void setTextContent(String songN, String artist, double duration) {
         lblSong.setText(songN);
         lblArtistName.setText(artist);
         lblTotalMins.setText(BLAudioPlayer.getMinSeg(duration));
         timerCounter.startCounter((long) duration, lblMinStart, pgBarSong);
-
+        
     }
 
     private void centrarInternalFrame(JInternalFrame interna) {
