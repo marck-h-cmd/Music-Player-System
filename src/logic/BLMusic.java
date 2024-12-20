@@ -51,7 +51,7 @@ public class BLMusic {
     // Pandaman
     public void addSongToPlaylist(Song song) {
         try {
-            //        if (audioPlayer.isPlaying()){ no es necesatio ver si esta activa, eso se ve externo
+           
             queue.encolar(song);
             songList.inserta(song);
         } catch (Exception e) {
@@ -204,13 +204,10 @@ public class BLMusic {
     // Pandaman
     public void pause() {
         try {
-            if (!audioPlayer.isPaused()) {// si  clip !=null && clip.isRunning
+            if (!audioPlayer.isPaused()) {
                 audioPlayer.pause();
-            } else {
-                // si clip!= null && audioPlayer.getIsPaused==true 
-                audioPlayer.resume();
-                //Si clip es null
-                //pause no hace nada 
+            } else {       
+                audioPlayer.resume();            
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error  playing song: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -237,7 +234,7 @@ public class BLMusic {
         if (songNodo == null) {
             return null;
         } else {
-            //return temporario;
+          
             return songNodo.getInfo();
         }
     }

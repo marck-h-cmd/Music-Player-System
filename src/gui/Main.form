@@ -255,7 +255,7 @@
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="pgBarSong" alignment="0" min="-2" pref="6" max="-2" attributes="0"/>
+                              <Component id="pgBarSong" alignment="0" min="-2" pref="8" max="-2" attributes="0"/>
                               <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                   <Component id="lblMinStart" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="lblTotalMins" alignment="3" min="-2" max="-2" attributes="0"/>

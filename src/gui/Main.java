@@ -16,6 +16,7 @@ import logic.BLAudioPlayer;
 import logic.BLMusic;
 import logic.BLPlaylist;
 import logic.BLSong;
+import logic.Utils;
 
 import structures.node.Nodo;
 import structures.node.NodoDoble;
@@ -356,7 +357,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(dspFondoLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pgBarSong, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pgBarSong, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dspFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lblMinStart)
                                 .addComponent(lblTotalMins)))
@@ -507,6 +508,7 @@ public class Main extends javax.swing.JFrame {
                     setTextContent(nodo.getInfo().getSongName(), nodo.getInfo().getArtistName(),nodo.getInfo().getDuration());
                 } else {
                     track.getAudioPlayer().resume();
+                    timerCounter.resumeCounter();
                 }
          //       track.setVolume(slVolumeSwitch.getValue());
 
@@ -516,6 +518,7 @@ public class Main extends javax.swing.JFrame {
                     mostrarHistorial(modelHistorial);
             } else {
                 track.pause();
+                timerCounter.pauseCounter();
                 setIcons("src/assets/img/controls/control-play.png","src/assets/img/controls/disc.png");
             }
         } catch (Exception e) {
@@ -555,9 +558,10 @@ public class Main extends javax.swing.JFrame {
 
         String playlist = cbxPlaylist.getSelectedItem().toString();
 
-        if (!track.getQueue().isEmpty()) {
+        if (!track.getQueue().isEmpty()) 
             track.clearTrack();
-        }
+        if(track.getAudioPlayer().isPlaying())
+            track.getAudioPlayer().stop();
 
         songs = BLSong.listByPlaylist(playlist);
         System.out.println(songs.toString());
@@ -588,6 +592,7 @@ public class Main extends javax.swing.JFrame {
         lblSong.setText(songN);
         lblArtistName.setText(artist);
         lblTotalMins.setText(BLAudioPlayer.getMinSeg(duration));
+        timerCounter.startCounter((long) duration, lblMinStart, pgBarSong);
 
     }
 
@@ -738,5 +743,6 @@ public class Main extends javax.swing.JFrame {
     private Song song;
     private ArrayList<Playlist> playlists;
     private ArrayList<Song> songs;
+    public Utils timerCounter = new Utils();
 
 }
