@@ -107,7 +107,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
 
         lblGenre.setText("Genero Musical");
 
-        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock" }));
+        cbxGenre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pop", "Salsa", "Electronica", "Tongo", "Rock", "Villancicos", "Otro" }));
 
         lblPath.setText("Direccion Archivo");
 
