@@ -33,9 +33,6 @@ public class BLMusic {
     private ArbolBB<Song> songTree = new ArbolBB<>();
     private ArbolBB<Playlist> playlistTree = new ArbolBB<>();
     
-    public BLMusic(){
-         //audioPlayer.setOnPlaybackEnd(this::playNext);
-    }
 
     public void addSong(Song song){ 
         try {
@@ -50,7 +47,6 @@ public class BLMusic {
         return AllSongs.getL();
     }
     
-    // Pandaman
     public void addSongToPlaylist(Song song) {
         try {
            
@@ -105,7 +101,6 @@ public class BLMusic {
 
     }
 
-    // Marck
     public Nodo<Song> playSiguiente(boolean esBucle) {
 
         try {
@@ -117,10 +112,9 @@ public class BLMusic {
                 
                 if(nodoCancionActual!=nodoCancionSiguiente)
                     historial.push(nodoCancionActual.getInfo());
-                
-                audioPlayer.play(nodoCancionSiguiente.getInfo().getFilePath());
-                
+                              
                 songList.getL().setSgte( nodoCancionSiguiente);
+                audioPlayer.play(nodoCancionSiguiente.getInfo().getFilePath());
                 queue.desencolar();
                 //Que cuando esta en el ultimo que se reprodusca el primero
                 if(songList.getL().getSgte()==nodoCancionActual && esBucle){
@@ -181,7 +175,6 @@ public class BLMusic {
     }
 
 
-    // Pandaman
     public void pause() {
         try {
             if (!audioPlayer.isPaused()) {
@@ -194,7 +187,7 @@ public class BLMusic {
         }
     }
 
-    //Alexis    //Reanudar la cancion despues que ha sido pausada 
+
     public void resume() {
         try {
             audioPlayer.resume();
@@ -207,7 +200,6 @@ public class BLMusic {
         audioPlayer.setVolumen(volume);
     }
 
-    //Jean Marko
     public Song searchSong(String nombre) {
         Song temporario = new Song(nombre, null, null, null, 0, null);
         NodoArbol<Song> songNodo = songTree.buscar(temporario);
@@ -230,7 +222,7 @@ public class BLMusic {
         }
     }
 
-    //Alexis  //Reproducir la cancion desde el principio
+  
     public void replay() {
         try {
             if (songList.getL() != null) {
@@ -272,9 +264,6 @@ public class BLMusic {
          Nodo<Song> nodo =  buscarNodoPorCancion(name);
          
          if(nodo !=null){         
-            //  historial.push(nodo.getInfo());
-            //  songList.eliminar(nodo.getInfo());
-            //  queue.eliminar(nodo.getInfo());
               audioPlayer.play( nodo.getInfo().getFilePath());
               return nodo;
          }
