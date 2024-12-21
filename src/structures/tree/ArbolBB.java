@@ -6,6 +6,8 @@ package structures.tree;
 
 import javax.swing.DefaultListModel;
 import javax.swing.table.DefaultTableModel;
+import logic.BLAudioPlayer;
+import logic.BLMusic;
 import structures.node.NodoArbol;
 import structures.object.Song;
 /**
@@ -68,15 +70,16 @@ public class ArbolBB<T extends Comparable<T>> {
        // modelo.removeAllElements();
         enOrden(raiz, modelo);
     }
-    
+
     private void agregarFila(DefaultTableModel modelo, T dato) { 
         if (dato instanceof Song) {
-            Song song = (Song) dato; // Realiza el cast
+            Song song = (Song) dato;
+            // Realiza el cast         
             Object[] fila = {
                 song.getSongName(),
                 song.getArtistName(),
                 song.getGenre(),
-                song.getDuration(),
+                BLAudioPlayer.getMinSeg(song.getDuration()),
                 song.getNamePlaylist()
             };
             modelo.addRow(fila);
