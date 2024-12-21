@@ -15,9 +15,8 @@ import javax.swing.table.DefaultTableModel;
 import logic.BLAudioPlayer;
 import logic.BLMusic;
 import logic.BLPlaylist;
-import logic.BLSong;
-import structures.linkedlist.ListaCircular;//quitar
-import structures.node.Nodo;    
+import logic.BLSong;    
+import structures.node.NodoArbol;
 import structures.object.Playlist;
 import structures.object.Song;  
 import structures.tree.ArbolBB;
@@ -29,7 +28,6 @@ import structures.tree.ArbolBB;
 public class InfShowSongs extends javax.swing.JInternalFrame {
     DefaultTableModel modelo = new DefaultTableModel();
     BLMusic b = new BLMusic();
-    //ListaCircular<Song> temporario = new ListaCircular<>();
     ArbolBB<Song> temporario = new ArbolBB<>();
     int cont=0;
     private int highlightedRow = -1;
@@ -189,7 +187,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         });
 
         cbxSong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbxSong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Playlist" }));
+        cbxSong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Canción" }));
         cbxSong.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbxSongActionPerformed(evt);
@@ -277,11 +275,14 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                 song = s.next();
                 b.addSong(song);
             }
-            Song temp = b.searchSong(busqueda);
+            //Song temp = b.searchSong(busqueda);
+            Song temp1 = new Song(busqueda);
+            NodoArbol<Song> temp=temporario.buscar(temp1);
             if (temp != null) {
                 
                 for (int i = 0; i < tblSongChart.getRowCount(); i++) {
-                    if (tblSongChart.getValueAt(i, 0).equals(temp.getSongName())) {
+                    //if (tblSongChart.getValueAt(i, 0).equals(temp.getSongName())) {
+                    if (tblSongChart.getValueAt(i, 0).equals(temp.getInfo().getSongName())) {
                         highlightedRow = i; // Guardar el índice de la fila.
                         break;
                     }
