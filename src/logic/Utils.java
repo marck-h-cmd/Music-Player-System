@@ -17,7 +17,7 @@ public class Utils {
     private volatile boolean isRunning;
     private volatile boolean isPaused; 
     private long elapsedTime = 0;  
-    
+    private volatile boolean isFinished;
     
     public String startCounter(long durationMillis, JLabel label, JProgressBar progressBar) {
         if (counterThread != null && isRunning) {
@@ -26,6 +26,7 @@ public class Utils {
 
         isRunning = true; 
         isPaused = false;
+        isFinished = false;
         elapsedTime = 0;
         final StringBuilder currentTime = new StringBuilder("00:00");
 
@@ -43,7 +44,8 @@ public class Utils {
 
                 if (elapsedTime >= durationMillis) {
                     elapsedTime = durationMillis; 
-                    isRunning = false; 
+                    isRunning = false;
+                    isFinished = true;
                 }
 
                 long seconds = (elapsedTime / 1000) % 60;
@@ -96,5 +98,9 @@ public class Utils {
 
     public void resumeCounter() {
         isPaused = false; 
+    }
+    
+    public boolean isFinished() {
+        return isFinished;
     }
 }
