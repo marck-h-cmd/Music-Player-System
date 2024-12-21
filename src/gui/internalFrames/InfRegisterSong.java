@@ -56,7 +56,7 @@ public class InfRegisterSong extends javax.swing.JInternalFrame {
             datos[i][0] = actual.getInfo().getSongName();
             datos[i][1] = actual.getInfo().getArtistName();
             datos[i][2] = actual.getInfo().getGenre();
-            datos[i][3] = actual.getInfo().getDuration();
+            datos[i][3] = BLAudioPlayer.getMinSeg(actual.getInfo().getDuration());
             datos[i][4] = actual.getInfo().getNamePlaylist();
             i++;
             actual = actual.getSgte();
