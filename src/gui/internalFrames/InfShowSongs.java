@@ -77,7 +77,9 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         }
     }
     
-    
+    /**
+     *
+     */
     public void mostrar() {
         String titulos[] = {"Nombre", "Artista", "Género", "Duración", "Playlist"};
         modelo.setColumnIdentifiers(titulos);
@@ -100,13 +102,13 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblSongChart = new javax.swing.JTable();
         lblsearchSong = new javax.swing.JLabel();
-        txtSearchSong = new javax.swing.JTextField();
         btnlookFor = new javax.swing.JButton();
         ctrlMusic2 = new javax.swing.JLabel();
         btnGoOut = new javax.swing.JButton();
         lblPlaylist = new javax.swing.JLabel();
         cbxPlaylist = new javax.swing.JComboBox<>();
         btnAddToPlaylist = new javax.swing.JButton();
+        cbxSong = new javax.swing.JComboBox<>();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -186,6 +188,14 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             }
         });
 
+        cbxSong.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxSong.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Playlist" }));
+        cbxSong.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSongActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -198,7 +208,6 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                 .addComponent(ctrlMusic2)
                 .addGap(161, 161, 161))
             .addGroup(jPanel1Layout.createSequentialGroup()
-
                 .addGap(51, 51, 51)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,15 +216,14 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                             .addComponent(lblsearchSong)
                             .addComponent(lblPlaylist))
                         .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxPlaylist, 0, 165, Short.MAX_VALUE)
-                            .addComponent(txtSearchSong))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxSong, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnAddToPlaylist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnlookFor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(0, 61, Short.MAX_VALUE))
-
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,18 +232,17 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblsearchSong)
-                    .addComponent(txtSearchSong, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnlookFor))
-
+                    .addComponent(btnlookFor)
+                    .addComponent(cbxSong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPlaylist)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cbxPlaylist, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnAddToPlaylist)))
-                .addGap(30, 30, 30)
+                .addGap(66, 66, 66)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGoOut, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ctrlMusic2, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -254,7 +261,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 4, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -263,7 +270,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
 
     private void btnlookForActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlookForActionPerformed
         if(cont==0){
-            String busqueda = txtSearchSong.getText();
+            String busqueda = cbxSong.getSelectedItem().toString();
             songs = BLSong.list();
             s = songs.iterator();
             while(s.hasNext()){
@@ -282,15 +289,15 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
                 tblSongChart.repaint();
                 
                 cont++;
-                txtSearchSong.setEnabled(false);
+                cbxSong.setEnabled(false);
                 btnlookFor.setEnabled(false);
                 btnAddToPlaylist.setEnabled(true);
                 cbxPlaylist.setEnabled(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Canción no encontrada");
                 cont=0;
-                txtSearchSong.setText("");
-                txtSearchSong.requestFocus();
+                cbxSong.setSelectedIndex(0);
+                cbxSong.requestFocus();
                 btnAddToPlaylist.setEnabled(false);
                 cbxPlaylist.setEnabled(false);
             }      
@@ -308,7 +315,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private void btnAddToPlaylistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToPlaylistActionPerformed
         if(cont==1){
             int res;
-            String nameSong = txtSearchSong.getText();
+            String nameSong = cbxSong.getSelectedItem().toString();
             song = BLSong.busqueda(nameSong); 
             String playlist = String.valueOf(cbxPlaylist.getSelectedItem());  
             if (playlist.equals(song.getNamePlaylist())){
@@ -327,9 +334,9 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             }
             cbxPlaylist.setSelectedIndex(0);
             cont=0;
-            txtSearchSong.setText("");
-            txtSearchSong.requestFocus();
-            txtSearchSong.setEnabled(true);
+            cbxSong.setSelectedIndex(0);
+            cbxSong.requestFocus();
+            cbxSong.setEnabled(true);
             btnlookFor.setEnabled(true);
             btnAddToPlaylist.setEnabled(false);
             cbxPlaylist.setEnabled(false);
@@ -338,6 +345,10 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
             tblSongChart.repaint();
         }
     }//GEN-LAST:event_btnAddToPlaylistActionPerformed
+
+    private void cbxSongActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSongActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxSongActionPerformed
     
     
     private void llenarCbx() {
@@ -354,8 +365,8 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         s = songs.iterator();
         while(s.hasNext()) {
             song = s.next();
-            //temporario.inserta(song);
-            temporario.inserta(song);
+            temporario.inserta(song); 
+            cbxSong.addItem(song.getSongName());
         }
         mostrar();
     }
@@ -365,6 +376,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGoOut;
     private javax.swing.JButton btnlookFor;
     private javax.swing.JComboBox<String> cbxPlaylist;
+    private javax.swing.JComboBox<String> cbxSong;
     private javax.swing.JLabel ctrlMusic;
     private javax.swing.JLabel ctrlMusic2;
     private javax.swing.JPanel jPanel1;
@@ -374,7 +386,6 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblsearchSong;
     private javax.swing.JTable tblSongChart;
-    private javax.swing.JTextField txtSearchSong;
     // End of variables declaration//GEN-END:variables
     private Song song;
     private Playlist obj;

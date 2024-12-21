@@ -53,7 +53,7 @@ public class Main extends javax.swing.JFrame {
         colorTable();
         setLocationRelativeTo(null);
         //   if(playlist!=null)
-        llenarCbx();
+     //   llenarCbx();
     }
     
     /**
@@ -106,6 +106,11 @@ public class Main extends javax.swing.JFrame {
         mniSalir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         dspFondo.setBackground(new java.awt.Color(204, 255, 204));
         dspFondo.setEnabled(false);
@@ -684,6 +689,11 @@ public class Main extends javax.swing.JFrame {
 
  
     }//GEN-LAST:event_ctrlSongMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+         llenarCbx();
+    }//GEN-LAST:event_formWindowOpened
 
     
     public void activateButtons(boolean state){

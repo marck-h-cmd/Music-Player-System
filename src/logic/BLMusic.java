@@ -144,7 +144,7 @@ public class BLMusic {
 
         try {
             
-            if (songList.getL() != null &&!historial.isEmpty()) {
+            if (songList.getL() != null ) {
                 Nodo<Song> nodoCancionActual = songList.getL().getSgte();
                 if(!historial.isEmpty()){    
                     Song song = historial.pop();
