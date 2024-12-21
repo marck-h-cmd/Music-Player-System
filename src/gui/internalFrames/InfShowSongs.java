@@ -16,10 +16,11 @@ import logic.BLAudioPlayer;
 import logic.BLMusic;
 import logic.BLPlaylist;
 import logic.BLSong;
-import structures.linkedlist.ListaCircular;
+import structures.linkedlist.ListaCircular;//quitar
 import structures.node.Nodo;    
 import structures.object.Playlist;
 import structures.object.Song;  
+import structures.tree.ArbolBB;
 
 /**
  *
@@ -28,7 +29,8 @@ import structures.object.Song;
 public class InfShowSongs extends javax.swing.JInternalFrame {
     DefaultTableModel modelo = new DefaultTableModel();
     BLMusic b = new BLMusic();
-    ListaCircular<Song> temporario = new ListaCircular<>();
+    //ListaCircular<Song> temporario = new ListaCircular<>();
+    ArbolBB<Song> temporario = new ArbolBB<>();
     int cont=0;
     private int highlightedRow = -1;
     /**
@@ -62,32 +64,25 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         tblSongChart.setModel(modelo);
     }
 
-    public void mostrar() {
-        if (temporario.esVacia()) {
-            JOptionPane.showMessageDialog(null, "La lista está vacía");
-            return;
+    private void agregarFila(DefaultTableModel modelo, Song dato) {
+        Object[] fila = {dato.getSongName(), dato.getArtistName(),dato.getGenre(),
+        dato.getDuration(),dato.getNamePlaylist()};
+        modelo.addRow(fila);
+    }
+    
+    private void limpiarTabla(DefaultTableModel modelo) {
+        int filas = modelo.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            modelo.removeRow(0);
         }
-        Nodo<Song> inicio = temporario.getL();
-        Nodo<Song> actual = inicio.getSgte();
-        int cont = 0;
-        do {
-            cont++;
-            actual = actual.getSgte();
-        } while (actual != inicio.getSgte());
-        Object[][] datos = new Object[cont][5];
-        String[] titulos = {"Nombre", "Artista", "Género", "Duración", "Playlist"};
-        actual = inicio.getSgte();
-        int i = 0;
-        do {
-            datos[i][0] = actual.getInfo().getSongName();
-            datos[i][1] = actual.getInfo().getArtistName();
-            datos[i][2] = actual.getInfo().getGenre();
-            datos[i][3] = BLAudioPlayer.getMinSeg(actual.getInfo().getDuration());
-            datos[i][4] = actual.getInfo().getNamePlaylist();
-            i++;
-            actual = actual.getSgte();
-        } while (actual != inicio.getSgte());
-        modelo.setDataVector(datos, titulos);
+    }
+    
+    
+    public void mostrar() {
+        String titulos[] = {"Nombre", "Artista", "Género", "Duración", "Playlist"};
+        modelo.setColumnIdentifiers(titulos);
+        limpiarTabla(modelo);
+        temporario.enOrden(modelo);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -359,6 +354,7 @@ public class InfShowSongs extends javax.swing.JInternalFrame {
         s = songs.iterator();
         while(s.hasNext()) {
             song = s.next();
+            //temporario.inserta(song);
             temporario.inserta(song);
         }
         mostrar();

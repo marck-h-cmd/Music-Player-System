@@ -5,7 +5,9 @@
 package structures.tree;
 
 import javax.swing.DefaultListModel;
+import javax.swing.table.DefaultTableModel;
 import structures.node.NodoArbol;
+import structures.object.Song;
 /**
  *
  * @author CRISTHIAN
@@ -62,18 +64,36 @@ public class ArbolBB<T extends Comparable<T>> {
         }
     }
 
-    public void enOrden(DefaultListModel modelo) {
-        modelo.removeAllElements();
+    public void enOrden(DefaultTableModel modelo) {
+       // modelo.removeAllElements();
         enOrden(raiz, modelo);
     }
-
-    private void enOrden(NodoArbol<T> r, DefaultListModel modelo) {
+    
+    private void agregarFila(DefaultTableModel modelo, T dato) { 
+        if (dato instanceof Song) {
+            Song song = (Song) dato; // Realiza el cast
+            Object[] fila = {
+                song.getSongName(),
+                song.getArtistName(),
+                song.getGenre(),
+                song.getDuration(),
+                song.getNamePlaylist()
+            };
+            modelo.addRow(fila);
+        } else {
+            throw new IllegalArgumentException("El dato no es de tipo Song");
+        }
+    }
+    
+    private void enOrden(NodoArbol<T> r, DefaultTableModel modelo) {
         if (r != null) {
             enOrden(r.getIzquierdo(),modelo);
-            modelo.addElement(r.getInfo());
+            //modelo.addElement(r.);
+            agregarFila(modelo, r.getInfo());
             enOrden(r.getDerecho(),modelo);
         }
     }
+
 
     public void postOrden(DefaultListModel modelo) {
         modelo.removeAllElements();
